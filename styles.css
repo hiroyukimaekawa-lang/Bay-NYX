@@ -518,34 +518,74 @@ ul {
 }
 
 /* ============================================
-   Gallery Section
+   Calendar Section
    ============================================ */
-.gallery-section {
-    background: var(--color-primary);
-    padding: var(--section-padding) 0;
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.gallery-item {
+.calendar-section {
+    padding: 100px 0;
     position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    aspect-ratio: 4/3;
-    cursor: pointer;
 }
 
-.gallery-item img {
+.calendar-wrapper {
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
+    /* Default height */
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-accent);
+    position: relative;
+}
+
+/* Optional: Invert filter for rough dark mode simulation */
+.calendar-wrapper iframe {
+    display: block;
+    /* filter: invert(0.9) hue-rotate(180deg); */
+}
+
+/* Reusing animation keyframes 'scroll' or creating new one if different speed needed */
+.gallery-track {
+    display: flex;
+    width: calc(350px * 20);
+    /* 350px * 20 items (10 original + 10 duplicates) */
+    animation: scroll 60s linear infinite;
+}
+
+.gallery-carousel:hover .gallery-track {
+    animation-play-state: paused;
+}
+
+/* Override previous .gallery-item styles for carousel context */
+.gallery-section .gallery-item {
+    width: 350px;
+    height: 250px;
+    margin: 0 10px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: var(--transition-smooth);
+}
+
+.gallery-section .gallery-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(31, 166, 160, 0.4);
+    z-index: 10;
+}
+
+.gallery-section .gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+}
+
+.gallery-section .gallery-item:hover img {
+    transform: scale(1.1);
 }
 
 .gallery-overlay {
@@ -554,7 +594,7 @@ ul {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(10, 10, 10, 0.7);
+    background: rgba(15, 26, 43, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -562,21 +602,16 @@ ul {
     transition: var(--transition-smooth);
 }
 
-.gallery-caption {
-    color: var(--color-text-light);
-    font-size: 1.2rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    transform: translateY(20px);
-    transition: var(--transition-smooth);
-}
-
-.gallery-item:hover img {
-    transform: scale(1.1);
-}
-
-.gallery-item:hover .gallery-overlay {
+.gallery-section .gallery-item:hover .gallery-overlay {
     opacity: 1;
+}
+
+.gallery-caption {
+    color: var(--color-accent);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    transition: var(--transition-smooth);
 }
 
 .gallery-item:hover .gallery-caption {
@@ -830,6 +865,23 @@ ul {
     margin-bottom: 10px;
 }
 
+.gallery-section .gallery-item .gallery-caption {
+    transform: translateY(20px);
+    transition: transform 0.5s ease;
+}
+
+.gallery-section .gallery-item:hover .gallery-caption {
+    transform: translateY(0);
+}
+
+/* Mobile responsive for gallery carousel */
+@media (max-width: 768px) {
+    .gallery-section .gallery-item {
+        width: 250px;
+        height: 180px;
+    }
+}
+
 .footer-tagline {
     color: var(--color-text-gray);
     font-size: 0.9rem;
@@ -924,6 +976,16 @@ ul {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
     }
 }
 
@@ -1066,7 +1128,8 @@ ul {
     }
 
     .detail-row {
-        grid-template-columns: 150px 1fr;
+        grid-template-columns: 100px 1fr;
+        /* Keep side-by-side on mobile, just smaller label */
     }
 }
 
@@ -1075,6 +1138,24 @@ ul {
     .container,
     .container-full {
         padding: 0 20px;
+    }
+
+    /* Mobile Header Adjustments */
+    .nav-container {
+        padding: 0 15px;
+    }
+
+    .nav-logo {
+        font-size: 1.5rem;
+        /* Smaller logo for mobile */
+    }
+
+
+
+    .calendar-wrapper {
+        height: 500px;
+        /* Adjust calendar height for mobile */
+        border-radius: 10px;
     }
 
     .nav-container {
@@ -1150,10 +1231,7 @@ ul {
         height: 350px;
     }
 
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
+
 
     .store-photos {
         grid-template-columns: repeat(3, 1fr);
@@ -1181,8 +1259,10 @@ ul {
 
     /* Specifically for Set Price (1st table wrapper) */
     .price-table-wrapper:nth-child(2) .price-row {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        /* Changed back to grid for stability */
+        grid-template-columns: 1fr 1.5fr;
+        /* Match other rows */
         padding: 10px;
     }
 
