@@ -28,16 +28,20 @@
     --color-text-muted: #999999;
     --color-overlay: rgba(15, 26, 43, 0.8);
     --color-overlay-light: rgba(15, 26, 43, 0.5);
+    --color-gold-soft: rgba(201, 162, 77, 0.25);
+    --color-gold-bright: #E7C873;
 
     /* Gradients */
     --gradient-gold: linear-gradient(135deg, #C9A24D 0%, #E6C068 100%);
     --gradient-purple: linear-gradient(135deg, #3A1C4A 0%, #5A2C6A 100%);
     --gradient-dark: linear-gradient(180deg, #0F1A2B 0%, #1a1a2e 100%);
     --gradient-overlay: linear-gradient(180deg, rgba(15, 26, 43, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%);
+    --gradient-gold-glow: linear-gradient(135deg, rgba(231, 200, 115, 0.4) 0%, rgba(201, 162, 77, 0.1) 100%);
 
     /* Typography */
     --font-primary: 'Noto Sans JP', sans-serif;
     --font-accent: 'Playfair Display', serif;
+    --font-display: 'Bodoni Moda', serif;
 
     /* Spacing */
     --section-padding: 100px;
@@ -208,6 +212,96 @@ ul {
     animation: fadeInUp 1s ease;
 }
 
+.gold-card {
+    position: absolute;
+    width: clamp(140px, 18vw, 220px);
+    aspect-ratio: 2 / 3;
+    border-radius: 18px;
+    border: 1px solid rgba(231, 200, 115, 0.5);
+    background: linear-gradient(150deg, rgba(231, 200, 115, 0.25) 0%, rgba(58, 28, 74, 0.4) 45%, rgba(15, 26, 43, 0.85) 100%);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    z-index: 2;
+    transform: rotate(-8deg);
+    animation: floatCard 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.gold-card-right {
+    right: clamp(20px, 6vw, 80px);
+    top: 18%;
+    transform: rotate(10deg);
+    animation-delay: 0.6s;
+}
+
+.gold-card-left {
+    left: clamp(20px, 6vw, 80px);
+    bottom: 15%;
+}
+
+.gold-card::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(231, 200, 115, 0.25);
+    background: var(--gradient-gold-glow);
+    opacity: 0.6;
+}
+
+.gold-card-inner {
+    position: absolute;
+    inset: 22px;
+    border-radius: 12px;
+    border: 1px solid rgba(231, 200, 115, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(15, 26, 43, 0.6);
+    z-index: 1;
+}
+
+.gold-card-suit {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    color: var(--color-gold-bright);
+}
+
+.suit-diamond {
+    color: #d9a23d;
+}
+
+.gold-card-label {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    color: var(--color-gold-bright);
+    letter-spacing: 0.1em;
+}
+
+@keyframes floatCard {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-8deg);
+    }
+    50% {
+        transform: translateY(-12px) rotate(-6deg);
+    }
+}
+
+.gold-card-right {
+    animation-name: floatCardRight;
+}
+
+@keyframes floatCardRight {
+    0%,
+    100% {
+        transform: translateY(0) rotate(10deg);
+    }
+    50% {
+        transform: translateY(12px) rotate(12deg);
+    }
+}
+
 .hero-title {
     font-family: var(--font-accent);
     font-size: clamp(3rem, 8vw, 6rem);
@@ -227,6 +321,10 @@ ul {
     letter-spacing: 0.3em;
     margin-bottom: 15px;
     color: var(--color-text-gray);
+}
+
+.hero-title {
+    font-family: var(--font-display);
 }
 
 .hero-location {
@@ -302,11 +400,208 @@ ul {
     margin-bottom: 10px;
 }
 
+.section-title-en {
+    font-family: var(--font-display);
+}
+
 .section-title-ja {
     font-size: clamp(1rem, 2vw, 1.3rem);
     font-weight: 300;
     letter-spacing: 0.3em;
     color: var(--color-text-gray);
+}
+
+/* ============================================
+   Concept Section
+   ============================================ */
+.concept-section {
+    background: radial-gradient(circle at top, rgba(58, 28, 74, 0.5) 0%, rgba(15, 26, 43, 0.95) 55%, rgba(10, 10, 10, 0.98) 100%);
+    overflow: hidden;
+}
+
+.concept-marquee {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid rgba(201, 162, 77, 0.2);
+    border-bottom: 1px solid rgba(201, 162, 77, 0.2);
+    background: rgba(15, 26, 43, 0.7);
+    padding: 18px 0;
+}
+
+.concept-track {
+    display: flex;
+    gap: 60px;
+    width: fit-content;
+    animation: marquee 18s linear infinite;
+    padding: 0 30px;
+}
+
+.concept-item {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3vw, 2.1rem);
+    letter-spacing: 0.2em;
+    color: var(--color-gold-bright);
+    text-transform: uppercase;
+}
+
+.concept-cards {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+.concept-card {
+    background: rgba(26, 26, 46, 0.65);
+    border: 1px solid rgba(201, 162, 77, 0.25);
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.concept-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(231, 200, 115, 0.12), rgba(31, 166, 160, 0.05), transparent);
+    opacity: 0;
+    transition: var(--transition-slow);
+}
+
+.concept-card:hover::before {
+    opacity: 1;
+}
+
+.concept-card-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--color-accent);
+    margin-bottom: 15px;
+    letter-spacing: 0.1em;
+}
+
+.concept-card-text {
+    color: var(--color-text-gray);
+    line-height: 1.9;
+    letter-spacing: 0.04em;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* ============================================
+   Cast Section
+   ============================================ */
+.cast-section {
+    background: var(--color-secondary);
+    position: relative;
+}
+
+.cast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.cast-card {
+    background: rgba(15, 26, 43, 0.7);
+    border: 1px solid rgba(201, 162, 77, 0.3);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    transition: var(--transition-slow);
+}
+
+.cast-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(231, 200, 115, 0.2);
+}
+
+.cast-card-face {
+    position: relative;
+    border-radius: 14px;
+    padding: 18px;
+    background: linear-gradient(160deg, rgba(231, 200, 115, 0.12) 0%, rgba(58, 28, 74, 0.2) 60%, rgba(15, 26, 43, 0.8) 100%);
+    border: 1px solid rgba(231, 200, 115, 0.25);
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cast-card-corner {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-gold-bright);
+    font-family: var(--font-display);
+}
+
+.cast-card-corner.bottom {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+    left: auto;
+    transform: rotate(180deg);
+}
+
+.cast-card-rank {
+    font-size: 1.3rem;
+}
+
+.cast-card-suit {
+    font-size: 1.1rem;
+}
+
+.cast-card-art svg {
+    width: 120px;
+    height: 120px;
+    fill: currentColor;
+}
+
+.gold-queen {
+    color: #e7c873;
+}
+
+.gold-queen svg rect {
+    fill: rgba(231, 200, 115, 0.15);
+    stroke: rgba(231, 200, 115, 0.4);
+    stroke-width: 2;
+}
+
+.gold-queen svg path {
+    fill: #e7c873;
+}
+
+.cast-card-info {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.cast-card-name {
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+}
+
+.cast-card-note {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.12em;
 }
 
 /* ============================================
@@ -1131,6 +1426,18 @@ ul {
         grid-template-columns: 100px 1fr;
         /* Keep side-by-side on mobile, just smaller label */
     }
+
+    .gold-card {
+        display: none;
+    }
+
+    .concept-track {
+        animation-duration: 24s;
+    }
+
+    .cast-card-face {
+        min-height: 220px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1244,6 +1551,14 @@ ul {
 
     .price-table-wrapper {
         margin-bottom: 30px;
+    }
+
+    .concept-cards {
+        gap: 20px;
+    }
+
+    .cast-grid {
+        gap: 20px;
     }
 
     /* Price Table Mobile: Time and Price on one line */
