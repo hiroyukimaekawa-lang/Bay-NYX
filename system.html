@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bay NYX 料金システム" />
+  <title>Bay NYX | System</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07090d;
+      --bg-soft: #0f141d;
+      --panel: #151d2a;
+      --line: rgba(255,255,255,0.1);
+      --text: #f4f6f8;
+      --muted: #b8c1ce;
+      --gold: #d6b15a;
+      --gold-soft: rgba(214,177,90,.24);
+      --container: 1080px;
+      --serif: "Playfair Display", serif;
+      --sans: "Noto Sans JP", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(circle at 80% -20%, #1a2335 0%, var(--bg) 36%), var(--bg);
+      line-height: 1.8;
+      letter-spacing: .02em;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(100%, var(--container)); margin: 0 auto; padding: 0 24px; }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(7,9,13,.92);
+      border-bottom: 1px solid rgba(214,177,90,.18);
+      backdrop-filter: blur(8px);
+    }
+    .nav-inner {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      letter-spacing: .12em;
+    }
+    .menu { display: flex; gap: 16px; }
+    .menu a {
+      color: var(--muted);
+      font-size: .68rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .menu a.active,
+    .menu a:hover { color: var(--gold); }
+
+    .hero {
+      padding: 80px 0 56px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .hero .en {
+      color: var(--gold);
+      font-size: .68rem;
+      letter-spacing: .35em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: .94rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 62px 0;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+    .section-head {
+      margin-bottom: 26px;
+      text-align: center;
+    }
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.45rem, 3.5vw, 2rem);
+      letter-spacing: .05em;
+    }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .price-card {
+      background: linear-gradient(145deg, #141c28, #0f141d);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .price-card h3 {
+      font-size: .88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .price {
+      font-family: var(--serif);
+      color: var(--gold);
+      font-size: 2rem;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .desc {
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      background: #111823;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .9rem;
+      text-align: left;
+    }
+    th {
+      color: var(--gold);
+      font-weight: 500;
+      letter-spacing: .06em;
+      background: rgba(214,177,90,.06);
+    }
+    td { color: #d8dee7; }
+    tr:last-child td { border-bottom: 0; }
+
+    .notes {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .82rem;
+      background: #10151e;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      white-space: pre-line;
+    }
+
+    .store-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .info-card {
+      background: #111823;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .info-card h3 {
+      font-family: var(--serif);
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+    .info-card p {
+      color: var(--muted);
+      font-size: .9rem;
+      white-space: pre-line;
+    }
+
+    .cta {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: .8rem;
+      letter-spacing: .08em;
+      transition: .2s ease;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: #201706;
+      border: 1px solid var(--gold);
+    }
+    .btn-secondary {
+      color: var(--gold);
+      border: 1px solid var(--gold-soft);
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(214,177,90,.2);
+      text-align: center;
+      color: #98a2b2;
+      font-size: .82rem;
+      padding: 24px 0;
+      background: #090d13;
+    }
+
+    @media (max-width: 820px) {
+      .price-grid,
+      .store-info { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .menu { gap: 10px; }
+      .menu a { font-size: .6rem; }
+      .hero { padding-top: 62px; }
+      th, td { padding: 12px; font-size: .82rem; }
+      .price { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a class="logo" href="index.html">Bay NYX</a>
+      <div class="menu">
+        <a href="index.html">Top</a>
+        <a href="system.html" class="active">System</a>
+        <a href="index.html#access">Access</a>
+        <a href="index.html#footer">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <p class="en">Pricing & System</p>
+      <h1>料金システム</h1>
+      <p>来店前に料金の目安が分かるよう、シンプルに掲載しています。詳細は店舗までお気軽にお問い合わせください。</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><h2>Set Plan</h2></div>
+      <div class="price-grid">
+        <article class="price-card">
+          <h3>60 min</h3>
+          <p class="price">¥5,000</p>
+          <p class="desc">1ドリンク + チャージ</p>
+        </article>
+        <article class="price-card">
+          <h3>90 min</h3>
+          <p class="price">¥7,000</p>
+          <p class="desc">1ドリンク + チャージ</p>
+        </article>
+      </div>
+      <div class="price-grid">
+        <article class="price-card">
+          <h3>120 min</h3>
+          <p class="price">¥9,000</p>
+          <p class="desc">1ドリンク + チャージ</p>
+        </article>
+        <article class="price-card">
+          <h3>延長 30 min</h3>
+          <p class="price">¥3,000</p>
+          <p class="desc">状況によりご案内いたします</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><h2>Drink / Option</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>料金</th>
+              <th>備考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ハウスボトル</td>
+              <td>¥8,000〜</td>
+              <td>銘柄により変動</td>
+            </tr>
+            <tr>
+              <td>シャンパン</td>
+              <td>¥15,000〜</td>
+              <td>在庫・銘柄要確認</td>
+            </tr>
+            <tr>
+              <td>カラオケ</td>
+              <td>¥1,000</td>
+              <td>歌い放題</td>
+            </tr>
+            <tr>
+              <td>VIP席</td>
+              <td>¥2,000</td>
+              <td>1組 / 1セット</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="notes">※ 表示価格は税込です。
+※ サービス内容・料金は営業状況により変更となる場合があります。
+※ 詳細は来店時またはお電話でご確認ください。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><h2>Store Information</h2></div>
+      <div class="store-info">
+        <article class="info-card">
+          <h3>Bay NYX</h3>
+          <p>神奈川県横浜市中区福富町仲通4-5
+和光中央ビル2階
+
+営業時間：8:00~12:00 / 20:00~24:00
+定休日：日曜・祝日</p>
+        </article>
+        <article class="info-card">
+          <h3>Access</h3>
+          <p>京浜東北線 関内駅 徒歩5分
+京浜急行 日ノ出町駅 徒歩5分
+
+ご予約・お問い合わせ
+TEL：045-XXX-XXXX</p>
+        </article>
+      </div>
+      <div class="cta">
+        <a class="btn btn-primary" href="tel:045-XXX-XXXX">電話で問い合わせ</a>
+        <a class="btn btn-secondary" href="index.html">TOPへ戻る</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">© 2025 Bay NYX. All Rights Reserved.</footer>
+</body>
+</html>

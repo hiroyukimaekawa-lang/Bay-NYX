@@ -1,297 +1,757 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bay NYX - 横浜のフィリピンクラブ・フィリピンラウンジ。落ち着いた大人の夜・社交場">
-    <title>Bay NYX | フィリピンクラブ・フィリピンラウンジ - 横浜</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bay NYX（ベイ・ニュクス）公式サイト。静寂に溶ける、本格の夜。" />
+  <title>Bay NYX | 静寂に溶ける、本格の夜</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg: #06080b;
+      --bg-soft: #0d1117;
+      --panel: #111722;
+      --text: #f3f5f7;
+      --muted: #b8c0cc;
+      --gold: #d8b35a;
+      --gold-soft: rgba(216, 179, 90, 0.24);
+      --line: rgba(255, 255, 255, 0.08);
+      --container: 1120px;
+      --serif: "Playfair Display", serif;
+      --sans: "Noto Sans JP", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(circle at 80% -10%, #172033 0%, var(--bg) 35%), var(--bg);
+      line-height: 1.8;
+      letter-spacing: 0.03em;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .container { width: min(100%, var(--container)); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+    .section-head { text-align: center; margin-bottom: 44px; }
+    .section-head .en {
+      color: var(--gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.34em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1.25;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(216, 179, 90, 0.16);
+      background: rgba(6, 8, 11, 0.9);
+      backdrop-filter: blur(10px);
+      transition: background 0.3s ease;
+    }
+    .navbar.scrolled { background: rgba(6, 8, 11, 0.98); }
+
+    .nav-inner {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+    }
+
+    .nav-menu { display: flex; gap: 18px; }
+    .nav-menu a {
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: color 0.25s ease;
+    }
+    .nav-menu a:hover,
+    .nav-menu a.active { color: var(--gold); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-tel {
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 0.62rem;
+      white-space: nowrap;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 23px;
+      height: 2px;
+      background: var(--gold);
+      margin: 5px 0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.74)),
+        url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1800&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-content {
+      position: relative;
+      text-align: center;
+      width: 100%;
+      padding-top: 30px;
+    }
+
+    .hero-catch {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 7vw, 4.4rem);
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      text-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-sub {
+      font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+      color: #e5e9ee;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .concept {
+      background: var(--bg-soft);
+    }
+    .concept-wrap {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(130deg, #111722, #0b0f16);
+      padding: 26px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .concept-gallery {
+      margin-top: 26px;
+    }
+    .concept-gallery .food-item {
+      border-radius: 12px;
+    }
+    .concept-wrap p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      white-space: pre-line;
+    }
+
+    .cuisine-copy {
+      text-align: center;
+      color: var(--muted);
+      max-width: 780px;
+      margin: 0 auto 30px;
+      white-space: pre-line;
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .food-item {
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      position: relative;
+    }
+    .food-item::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06));
+    }
+
+    .cast {
+      background: var(--bg-soft);
+    }
+    .cast-copy {
+      text-align: center;
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0 auto 30px;
+      white-space: pre-line;
+    }
+
+    .cast-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .cast-item { perspective: 1200px; }
+
+    .card {
+      position: relative;
+      height: 250px;
+      transform-style: preserve-3d;
+      transition: transform 0.62s ease;
+    }
+
+    .cast-item:hover .card,
+    .cast-item.is-flipped .card,
+    .cast-item:focus-within .card {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      border: 1px solid var(--gold);
+      backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    .card-front {
+      background: linear-gradient(160deg, #0c1016 0%, #1a2230 100%);
+      box-shadow: 0 0 30px rgba(216, 179, 90, 0.14);
+      display: grid;
+      place-items: center;
+    }
+
+    .rank {
+      position: absolute;
+      top: 11px;
+      left: 11px;
+      color: var(--gold);
+      font-family: var(--serif);
+      font-size: 1rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .rank.bottom {
+      top: auto;
+      left: auto;
+      right: 11px;
+      bottom: 11px;
+      transform: rotate(180deg);
+    }
+
+    .symbol {
+      color: var(--gold);
+      font-size: 2.9rem;
+      filter: drop-shadow(0 0 10px rgba(216, 179, 90, 0.3));
+    }
+
+    .title {
+      position: absolute;
+      bottom: 13px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #dfc070;
+      font-family: var(--serif);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: #111824;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .card-back h3 {
+      font-family: var(--serif);
+      color: var(--gold);
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .card-back p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .insta {
+      border: 1px solid var(--gold-soft);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      color: var(--gold);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .insta:hover {
+      background: var(--gold);
+      color: #1a1305;
+    }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+
+    .map {
+      min-height: 320px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #10151d;
+    }
+
+    .map iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      filter: grayscale(0.8) contrast(1.1);
+    }
+
+    .access-box {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #10151d;
+      padding: 22px;
+      color: var(--muted);
+      white-space: pre-line;
+      font-size: 0.92rem;
+    }
+
+    .access-box h3 {
+      font-family: var(--serif);
+      color: var(--text);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(216, 179, 90, 0.2);
+      background: #0a0f16;
+      padding: 30px 0;
+      text-align: center;
+      color: #98a2b2;
+      font-size: 0.84rem;
+    }
+
+    .back-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-soft);
+      background: #131a24;
+      color: var(--gold);
+      font-size: 1rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .back-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .fade {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 960px) {
+      .section { padding: 78px 0; }
+      .nav-tel { display: none; }
+      .food-grid { grid-template-columns: 1fr; }
+      .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .access-grid { grid-template-columns: 1fr; }
+      .map { min-height: 280px; }
+    }
+
+    @media (max-width: 720px) {
+      .nav-toggle { display: block; }
+
+      .nav-menu {
+        position: fixed;
+        top: 66px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 66px);
+        background: rgba(6, 8, 11, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        transition: left 0.3s ease;
+      }
+
+      .nav-menu.active { left: 0; }
+      .cast-grid { grid-template-columns: 1fr; }
+      .card { height: 230px; }
+    }
+  </style>
 </head>
-
 <body>
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a class="nav-logo" href="#home">BAY NYX</a>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#concept">CONCEPT</a></li>
-                <li><a href="#pillars">PILLARS</a></li>
-                <li><a href="#features">FEATURES</a></li>
-                <li><a href="#cast">CAST</a></li>
-                <li><a href="#menu">MENU</a></li>
-                <li><a href="#access">ACCESS</a></li>
-            </ul>
-            <a class="nav-phone" href="tel:045-XXX-XXXX">045-XXX-XXXX</a>
-            <button class="nav-toggle" id="navToggle" aria-label="メニューを開く">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="logo">Bay NYX</a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home">Home</a></li>
+        <li><a href="system.html">System</a></li>
+        <li><a href="#concept">Philosophy</a></li>
+        <li><a href="#cuisine">Cuisine</a></li>
+        <li><a href="#cast">Golden Cards</a></li>
+        <li><a href="#access">Access</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="tel:045-XXX-XXXX" class="nav-tel">045-XXX-XXXX</a>
+        <button class="nav-toggle" id="navToggle" aria-label="メニュー">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="home">
+    <div class="container hero-content fade">
+      <h1 class="hero-catch">静寂に溶ける、本格の夜</h1>
+      <p class="hero-sub">料理、空間、そして出会い。Bay NYXが紡ぐ、大人の時間。</p>
+    </div>
+  </header>
+
+  <section class="section concept" id="concept">
+    <div class="container">
+      <div class="section-head fade">
+        <p class="en">Philosophy</p>
+        <h2>喧騒から離れた、特別な夜を。</h2>
+      </div>
+      <div class="concept-wrap fade">
+        <p>Bay NYXは、一般的なフィリピンパブとは一線を画す、
+ラウンジスタイルの大人の社交場です。
+
+本格的な料理、洗練された空間、
+そして個性豊かなキャスト。
+
+すべてが調和した、上質な時間をご提供します。</p>
+      </div>
+      <div class="food-grid fade concept-gallery">
+        <figure class="food-item">
+          <img src="img/store.jpg" alt="Bay NYX 店内カウンター" />
+        </figure>
+        <figure class="food-item">
+          <img src="img/store1.jpg" alt="Bay NYX 店内ボトル棚" />
+        </figure>
+        <figure class="food-item">
+          <img src="img/pubimage.png" alt="Bay NYX 店内の雰囲気" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cuisine">
+    <div class="container">
+      <div class="section-head fade">
+        <p class="en">Cuisine</p>
+        <h2>妥協なきキッチンから生まれる、本格の味。</h2>
+      </div>
+      <p class="cuisine-copy fade">フィリピン料理を中心に、
+シェフが腕を振るう一品一品。
+
+料理もまた、この店の主役です。</p>
+      <div class="food-grid fade">
+        <figure class="food-item">
+          <img src="img/food1.jpg" alt="Bay NYX 料理写真1" />
+        </figure>
+        <figure class="food-item">
+          <img src="img/food2.jpg" alt="Bay NYX 料理写真2" />
+        </figure>
+        <figure class="food-item">
+          <img src="img/food3.jpg" alt="Bay NYX 料理写真3" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cast" id="cast">
+    <div class="container">
+      <div class="section-head fade">
+        <p class="en">Golden Cards</p>
+        <h2>夜を彩る、個性豊かな面々。</h2>
+      </div>
+      <p class="cast-copy fade">それぞれが一枚のカード。
+顔は見せずとも、その魅力は確かに。
+
+カードを裏返して、彼女たちの世界へ。</p>
+
+      <div class="cast-grid fade">
+        <article class="cast-item" tabindex="0">
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">Q<br />♥</span>
+              <span class="symbol">♥</span>
+              <span class="title">QUEEN OF HEARTS</span>
+              <span class="rank bottom">Q<br />♥</span>
+            </div>
+            <div class="card-face card-back">
+              <h3>QUEEN OF HEARTS</h3>
+              <p>明るく優しい笑顔が魅力</p>
+              <a class="insta" href="#" target="_blank" rel="noopener">@baynyx_queen</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cast-item" tabindex="0">
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">A<br />♠</span>
+              <span class="symbol">♠</span>
+              <span class="title">ACE OF SPADES</span>
+              <span class="rank bottom">A<br />♠</span>
+            </div>
+            <div class="card-face card-back">
+              <h3>ACE OF SPADES</h3>
+              <p>クールで知的な雰囲気</p>
+              <a class="insta" href="#" target="_blank" rel="noopener">@baynyx_ace</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cast-item" tabindex="0">
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">J<br />♦</span>
+              <span class="symbol">♦</span>
+              <span class="title">JACK OF DIAMONDS</span>
+              <span class="rank bottom">J<br />♦</span>
+            </div>
+            <div class="card-face card-back">
+              <h3>JACK OF DIAMONDS</h3>
+              <p>明るく元気なムードメーカー</p>
+              <a class="insta" href="#" target="_blank" rel="noopener">@baynyx_jack</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cast-item" tabindex="0">
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">K<br />♣</span>
+              <span class="symbol">♣</span>
+              <span class="title">KING OF CLUBS</span>
+              <span class="rank bottom">K<br />♣</span>
+            </div>
+            <div class="card-face card-back">
+              <h3>KING OF CLUBS</h3>
+              <p>聞き上手で安心感のある接客</p>
+              <a class="insta" href="#" target="_blank" rel="noopener">@baynyx_king</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cast-item" tabindex="0">
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">10<br />♥</span>
+              <span class="symbol">♥</span>
+              <span class="title">TEN OF HEARTS</span>
+              <span class="rank bottom">10<br />♥</span>
+            </div>
+            <div class="card-face card-back">
+              <h3>TEN OF HEARTS</h3>
+              <p>柔らかい空気感と細やかな気配り</p>
+              <a class="insta" href="#" target="_blank" rel="noopener">@baynyx_ten</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cast-item" tabindex="0">
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">9<br />♦</span>
+              <span class="symbol">♦</span>
+              <span class="title">NINE OF DIAMONDS</span>
+              <span class="rank bottom">9<br />♦</span>
+            </div>
+            <div class="card-face card-back">
+              <h3>NINE OF DIAMONDS</h3>
+              <p>華やかさと上品さを両立</p>
+              <a class="insta" href="#" target="_blank" rel="noopener">@baynyx_nine</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="access">
+    <div class="container">
+      <div class="section-head fade">
+        <p class="en">Access</p>
+        <h2>Bay NYX</h2>
+      </div>
+
+      <div class="access-grid fade">
+        <div class="map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3250.3267891234567!2d139.6234567!3d35.4456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDI2JzQ0LjQiTiAxMznCsDM3JzI0LjQiRQ!5e0!3m2!1sja!2sjp!4v1234567890123!5m2!1sja!2sjp"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
-    </nav>
 
-    <header class="hero" id="home">
-        <div class="hero-overlay"></div>
-        <div class="hero-content fade-in">
-            <p class="hero-eyebrow">WELCOME TO BAY NYX</p>
-            <h1 class="hero-title">BAY NYX</h1>
-            <p class="hero-subtitle">横浜・福富町の大人の隠れ家</p>
-            <p class="hero-description">落ち着いた空間と、華やかな時間を。</p>
+        <div class="access-box">
+          <h3>Bay NYX</h3>
+〒231-0043
+神奈川県横浜市中区福富町仲通4-5
+和光中央ビル2階
+
+営業時間
+朝の部：8:00 - 12:00
+夜の部：20:00 - 24:00
+
+定休日：日曜・祝日
+
+最寄り駅
+JR京浜東北線 関内駅 徒歩5分
+京浜急行 日ノ出町駅 徒歩5分
         </div>
-        <div class="hero-card hero-card-left" aria-hidden="true">
-            <span>J</span>
-            <span>♦</span>
-        </div>
-        <div class="hero-card hero-card-right" aria-hidden="true">
-            <span>Q</span>
-            <span>♦</span>
-        </div>
-    </header>
+      </div>
+    </div>
+  </section>
 
-    <main>
-        <section class="section section-concept" id="concept">
-            <div class="container">
-                <div class="section-head fade-in">
-                    <p class="section-eyebrow">CONCEPT</p>
-                    <h2 class="section-title">コンセプト</h2>
-                </div>
-                <div class="concept-panel fade-in">
-                    <div class="concept-image-wrap">
-                        <img src="img/pubimage.png" alt="Bay NYXの空間イメージ" class="concept-image">
-                    </div>
-                    <div class="concept-copy">
-                        <h3>夜に寄り添う、洗練された社交空間。</h3>
-                        <p>Bay NYXは、仕事帰りの一杯から大切な方との時間まで、幅広くご利用いただけるフィリピンインターナショナルクラブです。</p>
-                        <p>控えめな照明、心地よい音、会話が自然に弾む距離感で、日常から少し離れた時間を演出します。</p>
-                        <p>お一人でも、グループでも。いつ来ても安心して過ごせる場をご用意しています。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <footer class="footer" id="footer">
+    <div class="container">© 2025 Bay NYX. All Rights Reserved.</div>
+  </footer>
 
-        <section class="section section-pillars" id="pillars">
-            <div class="container">
-                <div class="section-head fade-in">
-                    <p class="section-eyebrow">THREE PILLARS</p>
-                    <h2 class="section-title">Bay NYXの3つの柱</h2>
-                </div>
-                <div class="pillars-grid">
-                    <article class="pillar-card fade-in">
-                        <div class="pillar-tag">01</div>
-                        <div class="pillar-icon">♣</div>
-                        <h3>お店</h3>
-                        <p>重厚感あるインテリアと、ほどよく開放的なレイアウト。</p>
-                        <ul>
-                            <li>落ち着いて話せる席配置</li>
-                            <li>初めてでも入りやすい導線</li>
-                            <li>清潔感のある店内設計</li>
-                        </ul>
-                    </article>
-                    <article class="pillar-card fade-in">
-                        <div class="pillar-tag">02</div>
-                        <div class="pillar-icon">♫</div>
-                        <h3>雰囲気</h3>
-                        <p>ラグジュアリーとリラックスを両立した空気感。</p>
-                        <ul>
-                            <li>会話を邪魔しないBGM</li>
-                            <li>時間帯で変化する照明演出</li>
-                            <li>居心地の良い接客距離</li>
-                        </ul>
-                    </article>
-                    <article class="pillar-card fade-in">
-                        <div class="pillar-tag">03</div>
-                        <div class="pillar-icon">◇</div>
-                        <h3>お料理</h3>
-                        <p>お酒に寄り添う料理を中心に、軽食からしっかり系まで。</p>
-                        <ul>
-                            <li>シェアしやすいフード</li>
-                            <li>定番おつまみを幅広く用意</li>
-                            <li>ドリンクとの相性重視</li>
-                        </ul>
-                    </article>
-                </div>
-                <div class="section-cta fade-in">
-                    <a href="#menu">3本柱の魅力をメニューで確認する</a>
-                </div>
-            </div>
-        </section>
+  <button id="backTop" class="back-top" aria-label="ページトップへ戻る">↑</button>
 
-        <section class="section section-features" id="features">
-            <div class="container">
-                <div class="section-head fade-in">
-                    <p class="section-eyebrow">FEATURES</p>
-                    <h2 class="section-title">Bay NYXの特徴</h2>
-                </div>
-                <div class="features-row fade-in">
-                    <div class="feature-chip"><span class="chip-icon">◆</span><span>飲み放題プラン</span></div>
-                    <div class="feature-chip"><span class="chip-icon">♫</span><span>カラオケ対応</span></div>
-                    <div class="feature-chip"><span class="chip-icon">◎</span><span>団体利用歓迎</span></div>
-                    <div class="feature-chip"><span class="chip-icon">→</span><span>駅近アクセス</span></div>
-                </div>
-                <div class="gallery-grid fade-in">
-                    <img src="img/store.jpg" alt="店内カウンター">
-                    <img src="img/food3.jpg" alt="ドリンクとフード">
-                    <img src="img/store1.jpg" alt="ボトルが並ぶ店内">
-                </div>
-            </div>
-        </section>
+  <script>
+    const navbar = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+    const backTop = document.getElementById('backTop');
 
-        <section class="section section-cast" id="cast">
-            <div class="container">
-                <div class="section-head fade-in">
-                    <p class="section-eyebrow">CAST</p>
-                    <h2 class="section-title">キャスト紹介</h2>
-                </div>
-                <div class="cast-grid">
-                    <article class="cast-card fade-in">
-                        <div class="card-face">
-                            <span class="corner">Q♦</span>
-                            <div class="center-mark">◆</div>
-                            <span class="corner corner-bottom">Q♦</span>
-                        </div>
-                        <p class="cast-name">CAST 01</p>
-                    </article>
-                    <article class="cast-card fade-in">
-                        <div class="card-face">
-                            <span class="corner">Q♦</span>
-                            <div class="center-mark">♥</div>
-                            <span class="corner corner-bottom">Q♦</span>
-                        </div>
-                        <p class="cast-name">CAST 02</p>
-                    </article>
-                    <article class="cast-card fade-in">
-                        <div class="card-face">
-                            <span class="corner">Q♦</span>
-                            <div class="center-mark">♠</div>
-                            <span class="corner corner-bottom">Q♦</span>
-                        </div>
-                        <p class="cast-name">CAST 03</p>
-                    </article>
-                    <article class="cast-card fade-in">
-                        <div class="card-face">
-                            <span class="corner">Q♦</span>
-                            <div class="center-mark">♣</div>
-                            <span class="corner corner-bottom">Q♦</span>
-                        </div>
-                        <p class="cast-name">CAST 04</p>
-                    </article>
-                </div>
-                <div class="section-cta fade-in">
-                    <a href="#contact">ご来店前のお問い合わせはこちら</a>
-                </div>
-            </div>
-        </section>
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+      backTop.classList.toggle('show', window.scrollY > 520);
+      setActiveNav();
+    });
 
-        <section class="section section-menu" id="menu">
-            <div class="container">
-                <div class="section-head fade-in">
-                    <p class="section-eyebrow">MENU & PRICE</p>
-                    <h2 class="section-title">メニュー・料金</h2>
-                </div>
-                <div class="menu-layout">
-                    <div class="menu-list fade-in">
-                        <h3>ドリンクメニュー</h3>
-                        <ul>
-                            <li>ウイスキー各種</li>
-                            <li>ブランデー各種</li>
-                            <li>焼酎・サワー</li>
-                            <li>ワイン・シャンパン</li>
-                            <li>ソフトドリンク</li>
-                        </ul>
-                        <h3>フードメニュー</h3>
-                        <ul>
-                            <li>ナッツ</li>
-                            <li>チーズ盛り合わせ</li>
-                            <li>ソーセージ</li>
-                            <li>パスタ</li>
-                            <li>ピザ</li>
-                        </ul>
-                    </div>
-                    <div class="price-cards fade-in">
-                        <h3 class="price-head">料金システム</h3>
-                        <article class="price-card">
-                            <h4>60分セット</h4>
-                            <p class="price">¥5,000</p>
-                            <p>飲み放題・指名料込み</p>
-                        </article>
-                        <article class="price-card">
-                            <h4>90分セット</h4>
-                            <p class="price">¥7,000</p>
-                            <p>飲み放題・指名料込み</p>
-                        </article>
-                        <article class="price-card">
-                            <h4>120分セット</h4>
-                            <p class="price">¥9,000</p>
-                            <p>飲み放題・指名料込み</p>
-                        </article>
-                        <article class="price-card">
-                            <h4>延長30分</h4>
-                            <p class="price">¥3,000</p>
-                            <p>VIPルーム +¥2,000</p>
-                        </article>
-                    </div>
-                </div>
-                <p class="price-note fade-in">※料金は税込表示です。初回は身分証明書の提示をお願いしております。</p>
-            </div>
-        </section>
+    navToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
 
-        <section class="section section-access" id="access">
-            <div class="container">
-                <div class="section-head fade-in">
-                    <p class="section-eyebrow">ACCESS</p>
-                    <h2 class="section-title">アクセス</h2>
-                </div>
-                <div class="access-layout fade-in">
-                    <div class="map-wrap">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3250.3267891234567!2d139.6234567!3d35.4456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDI2JzQ0LjQiTiAxMznCsDM3JzI0LjQiRQ!5e0!3m2!1sja!2sjp!4v1234567890123!5m2!1sja!2sjp"
-                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                    <div class="access-info">
-                        <h3>BAY NYX</h3>
-                        <p>〒231-0052 神奈川県横浜市中区福富町仲通4-5 和光中央ビル2階</p>
-                        <p>JR根岸線「関内駅」徒歩5分 / 横浜市営地下鉄「関内駅」徒歩3分</p>
-                        <p>営業時間: 19:00 〜 LAST（日曜定休）</p>
-                        <p>TEL: 045-XXX-XXXX</p>
-                        <div class="access-actions">
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=walking" target="_blank" rel="noopener">徒歩ルート</a>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=driving" target="_blank" rel="noopener">車ルート</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    document.querySelectorAll('.nav-menu a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+      });
+    });
 
-        <section class="section section-contact" id="contact">
-            <div class="container">
-                <div class="contact-panel fade-in">
-                    <h2>BAY NYX</h2>
-                    <p>ご予約・お問い合わせはお電話またはLINEで承っております。</p>
-                    <div class="contact-buttons">
-                        <a href="tel:045-XXX-XXXX" class="btn btn-primary">電話で予約</a>
-                        <a href="https://line.me/R/ti/p/@baynyx" class="btn btn-secondary" target="_blank" rel="noopener">LINEで予約</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const top = target.offsetTop - navbar.offsetHeight;
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+    });
 
-    <footer class="footer">
-        <div class="container">
-            <p class="footer-logo">BAY NYX</p>
-            <p class="footer-copy">© 2026 Bay NYX. All Rights Reserved.</p>
-        </div>
-    </footer>
+    backTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-    <button class="back-to-top" id="backToTop" aria-label="ページトップへ戻る">↑</button>
+    document.querySelectorAll('.cast-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        if (window.matchMedia('(hover: none)').matches) {
+          item.classList.toggle('is-flipped');
+        }
+      });
+    });
 
-    <script src="script.js"></script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.fade').forEach((el) => observer.observe(el));
+
+    function setActiveNav() {
+      const y = window.scrollY;
+      const sections = document.querySelectorAll('header[id], section[id]');
+      const links = document.querySelectorAll('.nav-menu a');
+
+      sections.forEach((sec) => {
+        const top = sec.offsetTop - 120;
+        const bottom = top + sec.offsetHeight;
+        if (y >= top && y < bottom) {
+          links.forEach((l) => l.classList.toggle('active', l.getAttribute('href') === `#${sec.id}`));
+        }
+      });
+    }
+
+    window.addEventListener('load', setActiveNav);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') navMenu.classList.remove('active');
+    });
+  </script>
 </body>
-
 </html>

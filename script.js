@@ -4,18 +4,8 @@ const navMenu = document.getElementById('navMenu');
 const backToTopButton = document.getElementById('backToTop');
 
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-
-    if (window.scrollY > 500) {
-        backToTopButton.classList.add('visible');
-    } else {
-        backToTopButton.classList.remove('visible');
-    }
-
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    backToTopButton.classList.toggle('visible', window.scrollY > 500);
     highlightNavigation();
 });
 
@@ -37,22 +27,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (!target) return;
 
         e.preventDefault();
-        const navHeight = navbar.offsetHeight;
-        const targetPosition = target.offsetTop - navHeight;
-        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+        const top = target.offsetTop - navbar.offsetHeight;
+        window.scrollTo({ top, behavior: 'smooth' });
     });
 });
 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
         }
     });
-}, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+}, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -20px 0px'
+});
 
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
 
 backToTopButton.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -60,23 +52,22 @@ backToTopButton.addEventListener('click', () => {
 
 function highlightNavigation() {
     const sections = document.querySelectorAll('section[id], header[id]');
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    const scrollY = window.scrollY;
+    const links = document.querySelectorAll('.nav-menu a');
+    const y = window.scrollY;
 
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 140;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        const sectionId = section.getAttribute('id');
+    sections.forEach((section) => {
+        const top = section.offsetTop - 120;
+        const bottom = top + section.offsetHeight;
+        const id = section.getAttribute('id');
 
-        if (scrollY >= sectionTop && scrollY < sectionBottom) {
-            navLinks.forEach(link => {
-                link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
+        if (y >= top && y < bottom) {
+            links.forEach((link) => {
+                const active = link.getAttribute('href') === `#${id}`;
+                link.classList.toggle('active', active);
             });
         }
     });
 }
-
-window.addEventListener('load', highlightNavigation);
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && navMenu.classList.contains('active')) {
@@ -84,3 +75,5 @@ document.addEventListener('keydown', (e) => {
         navMenu.classList.remove('active');
     }
 });
+
+window.addEventListener('load', highlightNavigation);
