@@ -7,480 +7,289 @@
     <meta name="description" content="Bay NYX - 横浜のフィリピンクラブ・フィリピンラウンジ。落ち着いた大人の夜・社交場">
     <title>Bay NYX | フィリピンクラブ・フィリピンラウンジ - 横浜</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="nav-logo">Bay NYX</div>
-            <ul class="nav-menu">
-                <li><a href="#home">HOME</a></li>
+            <a class="nav-logo" href="#home">BAY NYX</a>
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="#concept">CONCEPT</a></li>
-                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#pillars">PILLARS</a></li>
+                <li><a href="#features">FEATURES</a></li>
                 <li><a href="#cast">CAST</a></li>
-                <li><a href="#system">SYSTEM</a></li>
-                <li><a href="#calendar">SCHEDULE</a></li>
+                <li><a href="#menu">MENU</a></li>
                 <li><a href="#access">ACCESS</a></li>
-                <li><a href="#contact">CONTACT</a></li>
             </ul>
-            <div class="nav-toggle" id="navToggle">
+            <a class="nav-phone" href="tel:045-XXX-XXXX">045-XXX-XXXX</a>
+            <button class="nav-toggle" id="navToggle" aria-label="メニューを開く">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    <header class="hero" id="home">
         <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="hero-title">Bay NYX</h1>
-            <p class="hero-subtitle">落ち着いた大人の夜・社交場</p>
-            <p class="hero-location">横浜 福富町</p>
+        <div class="hero-content fade-in">
+            <p class="hero-eyebrow">WELCOME TO BAY NYX</p>
+            <h1 class="hero-title">BAY NYX</h1>
+            <p class="hero-subtitle">横浜・福富町の大人の隠れ家</p>
+            <p class="hero-description">落ち着いた空間と、華やかな時間を。</p>
         </div>
-        <div class="gold-card gold-card-left" aria-hidden="true">
-            <div class="gold-card-inner">
-                <div class="gold-card-suit suit-diamond">♦</div>
-                <div class="gold-card-label">J</div>
-            </div>
+        <div class="hero-card hero-card-left" aria-hidden="true">
+            <span>J</span>
+            <span>♦</span>
         </div>
-        <div class="gold-card gold-card-right" aria-hidden="true">
-            <div class="gold-card-inner">
-                <div class="gold-card-suit suit-diamond">♦</div>
-                <div class="gold-card-label">Q</div>
-            </div>
+        <div class="hero-card hero-card-right" aria-hidden="true">
+            <span>Q</span>
+            <span>♦</span>
         </div>
-        <div class="scroll-indicator">
-            <div class="scroll-arrow"></div>
-        </div>
-    </section>
+    </header>
 
-    <!-- Concept Section -->
-    <section class="section concept-section" id="concept">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">CONCEPT</h2>
-                <h3 class="section-title-ja">3本柱の魅力</h3>
-            </div>
-        </div>
-        <div class="concept-marquee" aria-label="Bay NYXの3本柱">
-            <div class="concept-track">
-                <div class="concept-item">お店 →</div>
-                <div class="concept-item">雰囲気 →</div>
-                <div class="concept-item">お料理 →</div>
-                <div class="concept-item">お店 →</div>
-                <div class="concept-item">雰囲気 →</div>
-                <div class="concept-item">お料理 →</div>
-            </div>
-        </div>
-        <div class="concept-cards container">
-            <div class="concept-card fade-in">
-                <h4 class="concept-card-title">お店</h4>
-                <p class="concept-card-text">重厚感のある空間で、プライベートな時間をゆったりと。</p>
-            </div>
-            <div class="concept-card fade-in">
-                <h4 class="concept-card-title">雰囲気</h4>
-                <p class="concept-card-text">落ち着いた照明と音楽が、心地よい大人の夜を演出します。</p>
-            </div>
-            <div class="concept-card fade-in">
-                <h4 class="concept-card-title">お料理</h4>
-                <p class="concept-card-text">お酒に合う一品から、シェアできるメニューまでご用意。</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="section about-section" id="about">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">ABOUT US</h2>
-                <h3 class="section-title-ja">当店について</h3>
-            </div>
-            <div class="about-content fade-in">
-                <p class="about-text">
-                    Bay NYX（ベイニュクス）は、横浜・福富町に佇むフィリピンクラブ・フィリピンラウンジです。
-                </p>
-                <p class="about-text">
-                    落ち着いた大人の雰囲気の中で、心地よいひとときをお過ごしいただけます。<br>
-                    明るく魅力的なキャストたちが、皆様のご来店を心よりお待ちしております。
-                </p>
-                <p class="about-text">
-                    仕事帰りの一杯、大切な方との特別な時間、仲間との楽しいひととき。<br>
-                    Bay NYXは、あなたの大切な時間を彩る社交場です。
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cast Section -->
-    <section class="section cast-section" id="cast">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">CAST</h2>
-                <h3 class="section-title-ja">キャスト</h3>
-            </div>
-            <div class="cast-grid">
-                <div class="cast-card fade-in">
-                    <div class="cast-card-face">
-                        <div class="cast-card-corner">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                        <div class="cast-card-art gold-queen">
-                            <svg viewBox="0 0 160 200" role="img" aria-label="Queen of Diamonds">
-                                <rect x="28" y="40" width="104" height="120" rx="18" />
-                                <path d="M80 26l14 18 18-8-6 20 18 10-18 10 6 20-18-8-14 18-14-18-18 8 6-20-18-10 18-10-6-20 18 8z" />
-                                <path d="M80 64c-18 0-32 12-32 26 0 10 8 18 16 22l-8 18 24-10 24 10-8-18c8-4 16-12 16-22 0-14-14-26-32-26z" />
-                                <rect x="54" y="120" width="52" height="28" rx="12" />
-                                <path d="M80 150l-14 14 14 14 14-14z" />
-                            </svg>
-                        </div>
-                        <div class="cast-card-corner bottom">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                    </div>
-                    <div class="cast-card-info">
-                        <p class="cast-card-name">CAST 01</p>
-                        <p class="cast-card-note">Queen of Diamonds</p>
-                    </div>
+    <main>
+        <section class="section section-concept" id="concept">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <p class="section-eyebrow">CONCEPT</p>
+                    <h2 class="section-title">コンセプト</h2>
                 </div>
-                <div class="cast-card fade-in">
-                    <div class="cast-card-face">
-                        <div class="cast-card-corner">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                        <div class="cast-card-art gold-queen">
-                            <svg viewBox="0 0 160 200" role="img" aria-label="Queen of Diamonds">
-                                <rect x="30" y="36" width="100" height="128" rx="18" />
-                                <path d="M80 30l12 16 20-6-6 18 18 10-18 10 6 18-20-6-12 16-12-16-20 6 6-18-18-10 18-10-6-18 20 6z" />
-                                <path d="M80 70c-20 0-36 12-36 28 0 12 10 20 20 24l-6 18 22-10 22 10-6-18c10-4 20-12 20-24 0-16-16-28-36-28z" />
-                                <path d="M58 118h44l-6 24H64z" />
-                                <path d="M80 146l-12 12 12 12 12-12z" />
-                            </svg>
-                        </div>
-                        <div class="cast-card-corner bottom">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
+                <div class="concept-panel fade-in">
+                    <div class="concept-image-wrap">
+                        <img src="img/pubimage.png" alt="Bay NYXの空間イメージ" class="concept-image">
                     </div>
-                    <div class="cast-card-info">
-                        <p class="cast-card-name">CAST 02</p>
-                        <p class="cast-card-note">Queen of Diamonds</p>
-                    </div>
-                </div>
-                <div class="cast-card fade-in">
-                    <div class="cast-card-face">
-                        <div class="cast-card-corner">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                        <div class="cast-card-art gold-queen">
-                            <svg viewBox="0 0 160 200" role="img" aria-label="Queen of Diamonds">
-                                <rect x="28" y="40" width="104" height="120" rx="18" />
-                                <path d="M80 26l14 18 18-8-6 20 18 10-18 10 6 20-18-8-14 18-14-18-18 8 6-20-18-10 18-10-6-20 18 8z" />
-                                <path d="M80 64c-18 0-32 12-32 26 0 10 8 18 16 22l-8 18 24-10 24 10-8-18c8-4 16-12 16-22 0-14-14-26-32-26z" />
-                                <rect x="54" y="120" width="52" height="28" rx="12" />
-                                <path d="M80 150l-14 14 14 14 14-14z" />
-                            </svg>
-                        </div>
-                        <div class="cast-card-corner bottom">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                    </div>
-                    <div class="cast-card-info">
-                        <p class="cast-card-name">CAST 03</p>
-                        <p class="cast-card-note">Queen of Diamonds</p>
-                    </div>
-                </div>
-                <div class="cast-card fade-in">
-                    <div class="cast-card-face">
-                        <div class="cast-card-corner">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                        <div class="cast-card-art gold-queen">
-                            <svg viewBox="0 0 160 200" role="img" aria-label="Queen of Diamonds">
-                                <rect x="30" y="36" width="100" height="128" rx="18" />
-                                <path d="M80 30l12 16 20-6-6 18 18 10-18 10 6 18-20-6-12 16-12-16-20 6 6-18-18-10 18-10-6-18 20 6z" />
-                                <path d="M80 70c-20 0-36 12-36 28 0 12 10 20 20 24l-6 18 22-10 22 10-6-18c10-4 20-12 20-24 0-16-16-28-36-28z" />
-                                <path d="M58 118h44l-6 24H64z" />
-                                <path d="M80 146l-12 12 12 12 12-12z" />
-                            </svg>
-                        </div>
-                        <div class="cast-card-corner bottom">
-                            <span class="cast-card-rank">Q</span>
-                            <span class="cast-card-suit suit-diamond">♦</span>
-                        </div>
-                    </div>
-                    <div class="cast-card-info">
-                        <p class="cast-card-name">CAST 04</p>
-                        <p class="cast-card-note">Queen of Diamonds</p>
+                    <div class="concept-copy">
+                        <h3>夜に寄り添う、洗練された社交空間。</h3>
+                        <p>Bay NYXは、仕事帰りの一杯から大切な方との時間まで、幅広くご利用いただけるフィリピンインターナショナルクラブです。</p>
+                        <p>控えめな照明、心地よい音、会話が自然に弾む距離感で、日常から少し離れた時間を演出します。</p>
+                        <p>お一人でも、グループでも。いつ来ても安心して過ごせる場をご用意しています。</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- System Section -->
-    <section class="section system-section" id="system">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">PRICE SYSTEM</h2>
-                <h3 class="section-title-ja">料金システム</h3>
-            </div>
-
-            <!-- セット料金 -->
-            <div class="price-table-wrapper fade-in">
-                <h3 class="price-table-title">セット料金</h3>
-                <div class="price-table">
-                    <div class="price-row price-header">
-                        <div class="price-cell">時間</div>
-                        <div class="price-cell">料金</div>
-                        <div class="price-cell">内容</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">60分</div>
-                        <div class="price-cell price-amount">¥5,000</div>
-                        <div class="price-cell">ドリンク飲み放題・キャスト指名料込み</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">90分</div>
-                        <div class="price-cell price-amount">¥7,000</div>
-                        <div class="price-cell">ドリンク飲み放題・キャスト指名料込み</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">120分</div>
-                        <div class="price-cell price-amount">¥9,000</div>
-                        <div class="price-cell">ドリンク飲み放題・キャスト指名料込み</div>
-                    </div>
+        <section class="section section-pillars" id="pillars">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <p class="section-eyebrow">THREE PILLARS</p>
+                    <h2 class="section-title">Bay NYXの3つの柱</h2>
+                </div>
+                <div class="pillars-grid">
+                    <article class="pillar-card fade-in">
+                        <div class="pillar-tag">01</div>
+                        <div class="pillar-icon">♣</div>
+                        <h3>お店</h3>
+                        <p>重厚感あるインテリアと、ほどよく開放的なレイアウト。</p>
+                        <ul>
+                            <li>落ち着いて話せる席配置</li>
+                            <li>初めてでも入りやすい導線</li>
+                            <li>清潔感のある店内設計</li>
+                        </ul>
+                    </article>
+                    <article class="pillar-card fade-in">
+                        <div class="pillar-tag">02</div>
+                        <div class="pillar-icon">♫</div>
+                        <h3>雰囲気</h3>
+                        <p>ラグジュアリーとリラックスを両立した空気感。</p>
+                        <ul>
+                            <li>会話を邪魔しないBGM</li>
+                            <li>時間帯で変化する照明演出</li>
+                            <li>居心地の良い接客距離</li>
+                        </ul>
+                    </article>
+                    <article class="pillar-card fade-in">
+                        <div class="pillar-tag">03</div>
+                        <div class="pillar-icon">◇</div>
+                        <h3>お料理</h3>
+                        <p>お酒に寄り添う料理を中心に、軽食からしっかり系まで。</p>
+                        <ul>
+                            <li>シェアしやすいフード</li>
+                            <li>定番おつまみを幅広く用意</li>
+                            <li>ドリンクとの相性重視</li>
+                        </ul>
+                    </article>
+                </div>
+                <div class="section-cta fade-in">
+                    <a href="#menu">3本柱の魅力をメニューで確認する</a>
                 </div>
             </div>
+        </section>
 
-            <!-- 延長料金 -->
-            <div class="price-table-wrapper fade-in">
-                <h3 class="price-table-title">延長料金</h3>
-                <div class="price-table">
-                    <div class="price-row price-header">
-                        <div class="price-cell">時間</div>
-                        <div class="price-cell">料金</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">30分</div>
-                        <div class="price-cell price-amount">¥3,000</div>
-                    </div>
+        <section class="section section-features" id="features">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <p class="section-eyebrow">FEATURES</p>
+                    <h2 class="section-title">Bay NYXの特徴</h2>
+                </div>
+                <div class="features-row fade-in">
+                    <div class="feature-chip"><span class="chip-icon">◆</span><span>飲み放題プラン</span></div>
+                    <div class="feature-chip"><span class="chip-icon">♫</span><span>カラオケ対応</span></div>
+                    <div class="feature-chip"><span class="chip-icon">◎</span><span>団体利用歓迎</span></div>
+                    <div class="feature-chip"><span class="chip-icon">→</span><span>駅近アクセス</span></div>
+                </div>
+                <div class="gallery-grid fade-in">
+                    <img src="img/store.jpg" alt="店内カウンター">
+                    <img src="img/food3.jpg" alt="ドリンクとフード">
+                    <img src="img/store1.jpg" alt="ボトルが並ぶ店内">
                 </div>
             </div>
+        </section>
 
-            <!-- オプション料金 -->
-            <div class="price-table-wrapper fade-in">
-                <h3 class="price-table-title">オプション料金</h3>
-                <div class="price-table">
-                    <div class="price-row price-header">
-                        <div class="price-cell">項目</div>
-                        <div class="price-cell">料金</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">VIPルーム利用</div>
-                        <div class="price-cell price-amount">¥2,000</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">プレミアムドリンク</div>
-                        <div class="price-cell price-amount">¥1,000〜</div>
-                    </div>
-                    <div class="price-row">
-                        <div class="price-cell">フード注文</div>
-                        <div class="price-cell price-amount">¥500〜</div>
-                    </div>
+        <section class="section section-cast" id="cast">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <p class="section-eyebrow">CAST</p>
+                    <h2 class="section-title">キャスト紹介</h2>
+                </div>
+                <div class="cast-grid">
+                    <article class="cast-card fade-in">
+                        <div class="card-face">
+                            <span class="corner">Q♦</span>
+                            <div class="center-mark">◆</div>
+                            <span class="corner corner-bottom">Q♦</span>
+                        </div>
+                        <p class="cast-name">CAST 01</p>
+                    </article>
+                    <article class="cast-card fade-in">
+                        <div class="card-face">
+                            <span class="corner">Q♦</span>
+                            <div class="center-mark">♥</div>
+                            <span class="corner corner-bottom">Q♦</span>
+                        </div>
+                        <p class="cast-name">CAST 02</p>
+                    </article>
+                    <article class="cast-card fade-in">
+                        <div class="card-face">
+                            <span class="corner">Q♦</span>
+                            <div class="center-mark">♠</div>
+                            <span class="corner corner-bottom">Q♦</span>
+                        </div>
+                        <p class="cast-name">CAST 03</p>
+                    </article>
+                    <article class="cast-card fade-in">
+                        <div class="card-face">
+                            <span class="corner">Q♦</span>
+                            <div class="center-mark">♣</div>
+                            <span class="corner corner-bottom">Q♦</span>
+                        </div>
+                        <p class="cast-name">CAST 04</p>
+                    </article>
+                </div>
+                <div class="section-cta fade-in">
+                    <a href="#contact">ご来店前のお問い合わせはこちら</a>
                 </div>
             </div>
+        </section>
 
-            <div class="system-note fade-in">
-                <p>※料金は全て税込表示です</p>
-                <p>※初回のお客様は身分証明書のご提示をお願いしております</p>
-                <p>※セット料金にはドリンク飲み放題が含まれます</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Calendar Section -->
-    <section class="section calendar-section" id="calendar">
-        <div class="calendar-wrapper">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">SCHEDULE</h2>
-                <h3 class="section-title-ja">営業スケジュール</h3>
-            </div>
-            
-            <iframe src="https://calendar.google.com/calendar/embed?src=ja.japanese%23holiday%40group.v.calendar.google.com&ctz=Asia%2FTokyo&showTitle=0&showPrint=0&showTabs=1&showCalendars=0" style="border: 0" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
-        </div>
-    </section>
-
-    <!-- Access Section -->
-    <section class="section access-section" id="access">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">ACCESS</h2>
-                <h3 class="section-title-ja">アクセス</h3>
-            </div>
-
-            <!-- Google Map -->
-            <div class="access-map-large fade-in">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3250.3267891234567!2d139.6234567!3d35.4456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDI2JzQ0LjQiTiAxMznCsDM3JzI0LjQiRQ!5e0!3m2!1sja!2sjp!4v1234567890123!5m2!1sja!2sjp"
-                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
-
-            <!-- Route Navigation -->
-            <div class="route-nav fade-in">
-                <h3 class="route-title">現在地からお店までのルートナビ</h3>
-                <div class="route-buttons">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=walking"
-                        target="_blank" rel="noopener" class="route-btn">
-                        <span class="route-text">徒歩</span>
-                    </a>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=transit"
-                        target="_blank" rel="noopener" class="route-btn">
-                        <span class="route-text">電車</span>
-                    </a>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=driving"
-                        target="_blank" rel="noopener" class="route-btn">
-                        <span class="route-text">車</span>
-                    </a>
+        <section class="section section-menu" id="menu">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <p class="section-eyebrow">MENU & PRICE</p>
+                    <h2 class="section-title">メニュー・料金</h2>
                 </div>
-
-                <!-- Store Information -->
-                <div class="store-info fade-in">
-                    <!-- Store Photos -->
-                    <div class="store-photos">
-                        <div class="store-photo-item">
-                            <img src="img/store.jpg" alt="Bay NYX 店内">
-                        </div>
-                        <div class="store-photo-item">
-                            <img src="img/store1.jpg" alt="Bay NYX カウンター">
-                        </div>
-                        <div class="store-photo-item">
-                            <img src="img/pubimage.png" alt="Bay NYX 店内雰囲気">
-                        </div>
+                <div class="menu-layout">
+                    <div class="menu-list fade-in">
+                        <h3>ドリンクメニュー</h3>
+                        <ul>
+                            <li>ウイスキー各種</li>
+                            <li>ブランデー各種</li>
+                            <li>焼酎・サワー</li>
+                            <li>ワイン・シャンパン</li>
+                            <li>ソフトドリンク</li>
+                        </ul>
+                        <h3>フードメニュー</h3>
+                        <ul>
+                            <li>ナッツ</li>
+                            <li>チーズ盛り合わせ</li>
+                            <li>ソーセージ</li>
+                            <li>パスタ</li>
+                            <li>ピザ</li>
+                        </ul>
                     </div>
+                    <div class="price-cards fade-in">
+                        <h3 class="price-head">料金システム</h3>
+                        <article class="price-card">
+                            <h4>60分セット</h4>
+                            <p class="price">¥5,000</p>
+                            <p>飲み放題・指名料込み</p>
+                        </article>
+                        <article class="price-card">
+                            <h4>90分セット</h4>
+                            <p class="price">¥7,000</p>
+                            <p>飲み放題・指名料込み</p>
+                        </article>
+                        <article class="price-card">
+                            <h4>120分セット</h4>
+                            <p class="price">¥9,000</p>
+                            <p>飲み放題・指名料込み</p>
+                        </article>
+                        <article class="price-card">
+                            <h4>延長30分</h4>
+                            <p class="price">¥3,000</p>
+                            <p>VIPルーム +¥2,000</p>
+                        </article>
+                    </div>
+                </div>
+                <p class="price-note fade-in">※料金は税込表示です。初回は身分証明書の提示をお願いしております。</p>
+            </div>
+        </section>
 
-                    <!-- Store Details Table -->
-                    <div class="store-details-table">
-                        <div class="detail-row">
-                            <div class="detail-label">店名</div>
-                            <div class="detail-value">フィリピンインターナショナルクラブ Bay NYX</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">所在地（住所）</div>
-                            <div class="detail-value">Philippine International Club Bay NYX</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">住所</div>
-                            <div class="detail-value">〒231-0052 神奈川県横浜市中区福富町仲通4-5 和光中央ビル2階</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">営業時間</div>
-                            <div class="detail-value">19:00 〜 LAST（日曜定休）</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">最寄り駅</div>
-                            <div class="detail-value">JR根岸線「関内駅」徒歩5分 / 横浜市営地下鉄「関内駅」徒歩3分</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">電話番号</div>
-                            <div class="detail-value">045-XXX-XXXX（営業時間内）</div>
+        <section class="section section-access" id="access">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <p class="section-eyebrow">ACCESS</p>
+                    <h2 class="section-title">アクセス</h2>
+                </div>
+                <div class="access-layout fade-in">
+                    <div class="map-wrap">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3250.3267891234567!2d139.6234567!3d35.4456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDI2JzQ0LjQiTiAxMznCsDM3JzI0LjQiRQ!5e0!3m2!1sja!2sjp!4v1234567890123!5m2!1sja!2sjp"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <div class="access-info">
+                        <h3>BAY NYX</h3>
+                        <p>〒231-0052 神奈川県横浜市中区福富町仲通4-5 和光中央ビル2階</p>
+                        <p>JR根岸線「関内駅」徒歩5分 / 横浜市営地下鉄「関内駅」徒歩3分</p>
+                        <p>営業時間: 19:00 〜 LAST（日曜定休）</p>
+                        <p>TEL: 045-XXX-XXXX</p>
+                        <div class="access-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=walking" target="_blank" rel="noopener">徒歩ルート</a>
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=神奈川県横浜市中区福富町仲通4-5&travelmode=driving" target="_blank" rel="noopener">車ルート</a>
                         </div>
                     </div>
                 </div>
             </div>
-    </section>
+        </section>
 
-    <!-- Contact Section -->
-    <section class="section contact-section" id="contact">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title-en">CONTACT</h2>
-                <h3 class="section-title-ja">ご予約・お問い合わせ</h3>
-            </div>
-            <div class="contact-content fade-in">
-                <p class="contact-text">
-                    ご予約・お問い合わせは、お電話またはLINEにて承っております。<br>
-                    お気軽にご連絡ください。
-                </p>
-                <div class="contact-buttons">
-                    <a href="tel:045-XXX-XXXX" class="btn btn-primary">
-                        <span class="btn-icon">📞</span>
-                        電話で予約
-                    </a>
-                    <a href="https://line.me/R/ti/p/@baynyx" class="btn btn-secondary" target="_blank" rel="noopener">
-                        <span class="btn-icon">💬</span>
-                        LINEで予約
-                    </a>
+        <section class="section section-contact" id="contact">
+            <div class="container">
+                <div class="contact-panel fade-in">
+                    <h2>BAY NYX</h2>
+                    <p>ご予約・お問い合わせはお電話またはLINEで承っております。</p>
+                    <div class="contact-buttons">
+                        <a href="tel:045-XXX-XXXX" class="btn btn-primary">電話で予約</a>
+                        <a href="https://line.me/R/ti/p/@baynyx" class="btn btn-secondary" target="_blank" rel="noopener">LINEで予約</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3 class="footer-logo">Bay NYX</h3>
-                    <p class="footer-tagline">落ち着いた大人の夜・社交場</p>
-                </div>
-                <div class="footer-info">
-                    <p>〒231-0052 神奈川県横浜市中区福富町仲通4-5 和光中央ビル2階</p>
-                    <p>TEL: 045-XXX-XXXX</p>
-                    <p>営業時間: 19:00 〜 LAST（日曜定休）</p>
-                </div>
-                <div class="footer-social">
-                    <a href="#" class="social-link" aria-label="Instagram">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                    </a>
-                    <a href="#" class="social-link" aria-label="Facebook">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                    </a>
-                    <a href="https://line.me/R/ti/p/@baynyx" class="social-link" aria-label="LINE" target="_blank"
-                        rel="noopener">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Bay NYX. All Rights Reserved.</p>
-            </div>
+            <p class="footer-logo">BAY NYX</p>
+            <p class="footer-copy">© 2026 Bay NYX. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" aria-label="ページトップへ戻る">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="18 15 12 9 6 15"></polyline>
-        </svg>
-    </button>
+    <button class="back-to-top" id="backToTop" aria-label="ページトップへ戻る">↑</button>
 
     <script src="script.js"></script>
 </body>
