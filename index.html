@@ -9,507 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --bg: #06080b;
-      --bg-soft: #0d1117;
-      --panel: #111722;
-      --text: #f3f5f7;
-      --muted: #b8c0cc;
-      --gold: #d8b35a;
-      --gold-soft: rgba(216, 179, 90, 0.24);
-      --line: rgba(255, 255, 255, 0.08);
-      --container: 1120px;
-      --serif: "Playfair Display", serif;
-      --sans: "Noto Sans JP", sans-serif;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--sans);
-      color: var(--text);
-      background: radial-gradient(circle at 80% -10%, #172033 0%, var(--bg) 35%), var(--bg);
-      line-height: 1.8;
-      letter-spacing: 0.03em;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    ul { list-style: none; }
-    img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .container { width: min(100%, var(--container)); margin: 0 auto; padding: 0 24px; }
-    .section { padding: 96px 0; border-top: 1px solid rgba(255, 255, 255, 0.05); }
-
-    .section-head { text-align: center; margin-bottom: 44px; }
-    .section-head .en {
-      color: var(--gold);
-      font-size: 0.7rem;
-      letter-spacing: 0.34em;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-    .section-head h2 {
-      font-family: var(--serif);
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      line-height: 1.25;
-      text-wrap: balance;
-      word-break: keep-all;
-      line-break: strict;
-    }
-    .pc-br { display: block; }
-    .sp-br { display: none; }
-
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(216, 179, 90, 0.16);
-      background: rgba(6, 8, 11, 0.9);
-      backdrop-filter: blur(10px);
-      transition: background 0.3s ease;
-    }
-    .navbar.scrolled { background: rgba(6, 8, 11, 0.98); }
-
-    .nav-inner {
-      height: 66px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .logo {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      letter-spacing: 0.14em;
-      white-space: nowrap;
-    }
-
-    .nav-menu { display: flex; gap: 18px; }
-    .nav-menu a {
-      color: var(--muted);
-      font-size: 0.68rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      transition: color 0.25s ease;
-    }
-    .nav-menu a:hover,
-    .nav-menu a.active { color: var(--gold); }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-tel {
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 4px;
-      padding: 5px 10px;
-      font-size: 0.62rem;
-      white-space: nowrap;
-    }
-
-    .nav-toggle {
-      display: none;
-      background: transparent;
-      border: 0;
-      cursor: pointer;
-    }
-    .nav-toggle span {
-      display: block;
-      width: 23px;
-      height: 2px;
-      background: var(--gold);
-      margin: 5px 0;
-    }
-
-    .hero {
-      min-height: 100vh;
-      position: relative;
-      display: flex;
-      align-items: center;
-      background-image:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.74)),
-        url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1800&q=80');
-      background-size: cover;
-      background-position: center;
-    }
-
-    .hero-content {
-      position: relative;
-      text-align: center;
-      width: 100%;
-      padding-top: 30px;
-    }
-
-    .hero-catch {
-      font-family: var(--serif);
-      font-size: clamp(2.2rem, 7vw, 4.4rem);
-      line-height: 1.2;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-      text-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-      text-wrap: balance;
-      word-break: keep-all;
-      line-break: strict;
-    }
-
-    .hero-sub {
-      font-size: clamp(0.95rem, 2.5vw, 1.25rem);
-      color: #e5e9ee;
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .concept {
-      background: var(--bg-soft);
-    }
-    .concept-wrap {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: linear-gradient(130deg, #111722, #0b0f16);
-      padding: 26px;
-      max-width: 920px;
-      margin: 0 auto;
-    }
-    .concept-gallery {
-      margin-top: 26px;
-      overflow: hidden;
-      border-radius: 12px;
-    }
-    .concept-track {
-      display: flex;
-      gap: 12px;
-      width: max-content;
-      animation: concept-scroll 26s linear infinite;
-    }
-    .concept-gallery:hover .concept-track {
-      animation-play-state: paused;
-    }
-    .concept-slide {
-      flex: 0 0 calc((min(100vw, var(--container)) - 72px) / 3);
-      max-width: 360px;
-    }
-    .concept-slide.food-item {
-      border-radius: 12px;
-    }
-    @keyframes concept-scroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-    .concept-wrap p {
-      color: var(--muted);
-      font-size: 0.95rem;
-      white-space: pre-line;
-    }
-
-    .cuisine-copy {
-      text-align: center;
-      color: var(--muted);
-      max-width: 780px;
-      margin: 0 auto 30px;
-      white-space: pre-line;
-    }
-
-    .food-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-    .food-carousel {
-      overflow: hidden;
-      border-radius: 12px;
-    }
-    .food-track {
-      display: flex;
-      gap: 12px;
-      width: max-content;
-      animation: food-scroll 28s linear infinite;
-    }
-    .food-carousel:hover .food-track {
-      animation-play-state: paused;
-    }
-    .food-slide {
-      flex: 0 0 calc((min(100vw, var(--container)) - 72px) / 3);
-      max-width: 360px;
-    }
-    @keyframes food-scroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-    .food-item {
-      aspect-ratio: 4 / 3;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      position: relative;
-    }
-    .food-item::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06));
-    }
-
-    .cast {
-      background: var(--bg-soft);
-    }
-    .cast-copy {
-      text-align: center;
-      color: var(--muted);
-      max-width: 760px;
-      margin: 0 auto 30px;
-      white-space: pre-line;
-    }
-
-    .cast-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .cast-item { perspective: 1200px; }
-
-    .card {
-      position: relative;
-      height: 250px;
-      transform-style: preserve-3d;
-      transition: transform 0.62s ease;
-    }
-
-    .cast-item:hover .card,
-    .cast-item.is-flipped .card,
-    .cast-item:focus-within .card {
-      transform: rotateY(180deg);
-    }
-
-    .card-face {
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      border: 1px solid var(--gold);
-      backface-visibility: hidden;
-      overflow: hidden;
-    }
-
-    .card-front {
-      background: linear-gradient(160deg, #0c1016 0%, #1a2230 100%);
-      box-shadow: 0 0 30px rgba(216, 179, 90, 0.14);
-      display: grid;
-      place-items: center;
-    }
-
-    .rank {
-      position: absolute;
-      top: 11px;
-      left: 11px;
-      color: var(--gold);
-      font-family: var(--serif);
-      font-size: 1rem;
-      line-height: 1.2;
-      text-align: center;
-    }
-
-    .rank.bottom {
-      top: auto;
-      left: auto;
-      right: 11px;
-      bottom: 11px;
-      transform: rotate(180deg);
-    }
-
-    .symbol {
-      color: var(--gold);
-      font-size: 2.9rem;
-      filter: drop-shadow(0 0 10px rgba(216, 179, 90, 0.3));
-    }
-
-    .title {
-      position: absolute;
-      bottom: 13px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #dfc070;
-      font-family: var(--serif);
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      white-space: nowrap;
-    }
-
-    .card-back {
-      transform: rotateY(180deg);
-      background: #111824;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 10px;
-      padding: 14px;
-    }
-
-    .card-back h3 {
-      font-family: var(--serif);
-      color: var(--gold);
-      font-size: 1.25rem;
-      line-height: 1.2;
-      text-wrap: balance;
-      word-break: keep-all;
-    }
-
-    .card-back p {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    .insta {
-      border: 1px solid var(--gold-soft);
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 0.75rem;
-      color: var(--gold);
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .insta:hover {
-      background: var(--gold);
-      color: #1a1305;
-    }
-
-    .access-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 16px;
-    }
-
-    .map {
-      min-height: 320px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      overflow: hidden;
-      background: #10151d;
-    }
-
-    .map iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      filter: grayscale(0.8) contrast(1.1);
-    }
-
-    .access-box {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #10151d;
-      padding: 22px;
-      color: var(--muted);
-      white-space: pre-line;
-      font-size: 0.92rem;
-    }
-
-    .access-box h3 {
-      font-family: var(--serif);
-      color: var(--text);
-      font-size: 1.5rem;
-      margin-bottom: 8px;
-    }
-
-    .footer {
-      border-top: 1px solid rgba(216, 179, 90, 0.2);
-      background: #0a0f16;
-      padding: 30px 0;
-      text-align: center;
-      color: #98a2b2;
-      font-size: 0.84rem;
-    }
-
-    .back-top {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid var(--gold-soft);
-      background: #131a24;
-      color: var(--gold);
-      font-size: 1rem;
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-
-    .back-top.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .fade {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 960px) {
-      .section { padding: 78px 0; }
-      .nav-tel { display: none; }
-      .concept-slide { flex-basis: calc((100vw - 60px) / 2); }
-      .food-slide { flex-basis: calc((100vw - 60px) / 2); }
-      .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .access-grid { grid-template-columns: 1fr; }
-      .map { min-height: 280px; }
-    }
-
-    @media (max-width: 720px) {
-      .nav-toggle { display: block; }
-
-      .nav-menu {
-        position: fixed;
-        top: 66px;
-        left: -100%;
-        width: 100%;
-        height: calc(100vh - 66px);
-        background: rgba(6, 8, 11, 0.98);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        transition: left 0.3s ease;
-      }
-
-      .nav-menu.active { left: 0; }
-      .concept-slide { flex-basis: 82vw; max-width: none; }
-      .food-slide { flex-basis: 82vw; max-width: none; }
-      .hero-catch,
-      .section-head h2 {
-        letter-spacing: 0.02em;
-        line-height: 1.35;
-      }
-      .pc-br { display: none; }
-      .sp-br { display: block; }
-      .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .card { height: 230px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .concept-track { animation: none; }
-      .food-track { animation: none; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <nav class="navbar" id="navbar">
@@ -581,48 +81,88 @@
 
   <section class="section" id="cuisine">
     <div class="container">
-      <div class="section-head fade">
-        <p class="en">Food & Drink</p>
-        <h2>食事ができる<span class="pc-br"></span><span class="sp-br"></span>良い酒が飲める</h2>
-      </div>
-      <p class="cuisine-copy fade">それが、Bay NYXの誇りです。
+      <div class="food-message fade">
+        <div class="section-head">
+          <p class="en">Food & Drink</p>
+          <h2>食事ができる<span class="pc-br"></span><span class="sp-br"></span>良い酒が飲める</h2>
+        </div>
+        <p class="cuisine-copy">それが、Bay NYXの誇りです。
 
-お好み焼き、焼きそば、チキンライス。
-定番の味を、丁寧に。
+他店にはない、自店キッチンで仕上げる料理。
+作り置きではなく、注文を受けてから作る温かさを味わいください
 
 そして全てのお客様に、
 生ハム、チーズ、手作りレーズンバター、
 フランス産チョコレートをサービスで。
 
-※初めてのお客様から
+※初めてのお客様は
 「頼んでないのに…」と驚かれますが、
-全てサービスです。ご安心ください。
+これもおもてなし。全てサービスです。
 
-"乾き物だけで高額請求"
-そんな店とは、一線を画します。
+お値段以上の食事を会話とお酒と共にお楽しみください
 
-ここは、本当に過ごせる場所。
-食事も、酒も、会話も、すべてが揃った空間です。</p>
-      <div class="food-carousel fade">
-        <div class="food-track">
-        <figure class="food-item food-slide">
-          <img src="img/food1.jpg" alt="Bay NYX 料理写真1" />
-        </figure>
-        <figure class="food-item food-slide">
-          <img src="img/food2.jpg" alt="Bay NYX 料理写真2" />
-        </figure>
-        <figure class="food-item food-slide">
-          <img src="img/food3.jpg" alt="Bay NYX 料理写真3" />
-        </figure>
-        <figure class="food-item food-slide" aria-hidden="true">
-          <img src="img/food1.jpg" alt="" />
-        </figure>
-        <figure class="food-item food-slide" aria-hidden="true">
-          <img src="img/food2.jpg" alt="" />
-        </figure>
-        <figure class="food-item food-slide" aria-hidden="true">
-          <img src="img/food3.jpg" alt="" />
-        </figure>
+ベイニュクスは
+食事も、酒も、会話も、すべてが揃った空間です。
+気兼ねなくご堪能ください</p>
+      </div>
+
+      <div class="food-tabs fade">
+        <div class="tab-buttons" role="tablist" aria-label="Food & Drink tabs">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-tab="menu">料理メニュー</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="service">サービスプレート</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="drink">ドリンク</button>
+        </div>
+
+        <div class="tab-content active" data-content="menu">
+          <div class="menu-photo-grid">
+            <figure class="food-item">
+              <img src="img/food1.jpg" alt="お好み焼き" />
+              <figcaption class="food-caption"><strong>お好み焼き</strong><span>ふんわり 香ばしく / ¥1,200</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <img src="img/food2.jpg" alt="焼きそば" />
+              <figcaption class="food-caption"><strong>焼きそば</strong><span>定番の安心感 / ¥1,000</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <img src="img/food3.jpg" alt="チキンライス" />
+              <figcaption class="food-caption"><strong>チキンライス</strong><span>やさしい一皿 / ¥1,500</span></figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="service">
+          <div class="service-trump-grid">
+            <article class="service-trump-card">
+              <span class="service-rank">A♦</span>
+              <span class="service-mark">◆</span>
+              <h3>日替わり 生ハム</h3>
+              <p>軽くつまめる塩味と香り</p>
+              <span class="service-badge">サービス</span>
+            </article>
+            <article class="service-trump-card">
+              <span class="service-rank">K♦</span>
+              <span class="service-mark">◇</span>
+              <h3>日替わり チーズ</h3>
+              <p>ワインに合う定番の一皿</p>
+              <span class="service-badge">サービス</span>
+            </article>
+            <article class="service-trump-card">
+              <span class="service-rank">Q♦</span>
+              <span class="service-mark">♢</span>
+              <h3>日替わり レーズンバター & チョコ</h3>
+              <p>甘味とコクのアクセント</p>
+              <span class="service-badge">サービス</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="tab-content" data-content="drink">
+          <div class="drink-grid">
+            <article class="drink-card"><h4>ハウスボトル</h4><p>¥8,000〜</p></article>
+            <article class="drink-card"><h4>シャンパン</h4><p>¥15,000〜</p></article>
+            <article class="drink-card"><h4>生ビール</h4><p>¥800</p></article>
+            <article class="drink-card"><h4>カクテル各種</h4><p>¥1,000〜</p></article>
+          </div>
         </div>
       </div>
     </div>
@@ -821,6 +361,25 @@ JR京浜東北線 関内駅 徒歩5分
         if (window.matchMedia('(hover: none)').matches) {
           item.classList.toggle('is-flipped');
         }
+      });
+    });
+
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const key = button.dataset.tab;
+
+        tabButtons.forEach((btn) => {
+          const active = btn === button;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        tabContents.forEach((content) => {
+          content.classList.toggle('active', content.dataset.content === key);
+        });
       });
     });
 
