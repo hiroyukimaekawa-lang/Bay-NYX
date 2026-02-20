@@ -56,7 +56,12 @@
       font-weight: 700;
       letter-spacing: 0.05em;
       line-height: 1.25;
+      text-wrap: balance;
+      word-break: keep-all;
+      line-break: strict;
     }
+    .pc-br { display: block; }
+    .sp-br { display: none; }
 
     .navbar {
       position: fixed;
@@ -151,6 +156,9 @@
       letter-spacing: 0.08em;
       margin-bottom: 12px;
       text-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      text-wrap: balance;
+      word-break: keep-all;
+      line-break: strict;
     }
 
     .hero-sub {
@@ -173,9 +181,28 @@
     }
     .concept-gallery {
       margin-top: 26px;
-    }
-    .concept-gallery .food-item {
+      overflow: hidden;
       border-radius: 12px;
+    }
+    .concept-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      animation: concept-scroll 26s linear infinite;
+    }
+    .concept-gallery:hover .concept-track {
+      animation-play-state: paused;
+    }
+    .concept-slide {
+      flex: 0 0 calc((min(100vw, var(--container)) - 72px) / 3);
+      max-width: 360px;
+    }
+    .concept-slide.food-item {
+      border-radius: 12px;
+    }
+    @keyframes concept-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
     .concept-wrap p {
       color: var(--muted);
@@ -195,6 +222,27 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
+    }
+    .food-carousel {
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .food-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      animation: food-scroll 28s linear infinite;
+    }
+    .food-carousel:hover .food-track {
+      animation-play-state: paused;
+    }
+    .food-slide {
+      flex: 0 0 calc((min(100vw, var(--container)) - 72px) / 3);
+      max-width: 360px;
+    }
+    @keyframes food-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
     .food-item {
       aspect-ratio: 4 / 3;
@@ -312,6 +360,8 @@
       color: var(--gold);
       font-size: 1.25rem;
       line-height: 1.2;
+      text-wrap: balance;
+      word-break: keep-all;
     }
 
     .card-back p {
@@ -416,7 +466,8 @@
     @media (max-width: 960px) {
       .section { padding: 78px 0; }
       .nav-tel { display: none; }
-      .food-grid { grid-template-columns: 1fr; }
+      .concept-slide { flex-basis: calc((100vw - 60px) / 2); }
+      .food-slide { flex-basis: calc((100vw - 60px) / 2); }
       .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .access-grid { grid-template-columns: 1fr; }
       .map { min-height: 280px; }
@@ -441,8 +492,22 @@
       }
 
       .nav-menu.active { left: 0; }
-      .cast-grid { grid-template-columns: 1fr; }
+      .concept-slide { flex-basis: 82vw; max-width: none; }
+      .food-slide { flex-basis: 82vw; max-width: none; }
+      .hero-catch,
+      .section-head h2 {
+        letter-spacing: 0.02em;
+        line-height: 1.35;
+      }
+      .pc-br { display: none; }
+      .sp-br { display: block; }
+      .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .card { height: 230px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .concept-track { animation: none; }
+      .food-track { animation: none; }
     }
   </style>
 </head>
@@ -454,12 +519,12 @@
         <li><a href="#home">Home</a></li>
         <li><a href="system.html">System</a></li>
         <li><a href="#concept">Philosophy</a></li>
-        <li><a href="#cuisine">Cuisine</a></li>
+        <li><a href="#cuisine">Food & Drink</a></li>
         <li><a href="#cast">Golden Cards</a></li>
         <li><a href="#access">Access</a></li>
       </ul>
       <div class="nav-right">
-        <a href="tel:045-XXX-XXXX" class="nav-tel">045-XXX-XXXX</a>
+        <a href="tel:045-326-6363" class="nav-tel">045-326-6363</a>
         <button class="nav-toggle" id="navToggle" aria-label="メニュー">
           <span></span><span></span><span></span>
         </button>
@@ -469,8 +534,8 @@
 
   <header class="hero" id="home">
     <div class="container hero-content fade">
-      <h1 class="hero-catch">静寂に溶ける、本格の夜</h1>
-      <p class="hero-sub">料理、空間、そして出会い。Bay NYXが紡ぐ、大人の時間。</p>
+      <h1 class="hero-catch">静寂に溶ける<span class="pc-br"></span><span class="sp-br"></span>本格の夜</h1>
+      <p class="hero-sub">料理 空間 そして出会い<span class="pc-br"></span><span class="sp-br"></span>Bay NYXが紡ぐ 大人の時間</p>
     </div>
   </header>
 
@@ -478,7 +543,7 @@
     <div class="container">
       <div class="section-head fade">
         <p class="en">Philosophy</p>
-        <h2>喧騒から離れた、特別な夜を。</h2>
+        <h2>喧騒から離れた<span class="pc-br"></span><span class="sp-br"></span>特別な夜を</h2>
       </div>
       <div class="concept-wrap fade">
         <p>Bay NYXは、一般的なフィリピンパブとは一線を画す、
@@ -489,16 +554,27 @@
 
 すべてが調和した、上質な時間をご提供します。</p>
       </div>
-      <div class="food-grid fade concept-gallery">
-        <figure class="food-item">
+      <div class="concept-gallery fade">
+        <div class="concept-track">
+        <figure class="food-item concept-slide">
           <img src="img/store.jpg" alt="Bay NYX 店内カウンター" />
         </figure>
-        <figure class="food-item">
+        <figure class="food-item concept-slide">
           <img src="img/store1.jpg" alt="Bay NYX 店内ボトル棚" />
         </figure>
-        <figure class="food-item">
+        <figure class="food-item concept-slide">
           <img src="img/pubimage.png" alt="Bay NYX 店内の雰囲気" />
         </figure>
+        <figure class="food-item concept-slide" aria-hidden="true">
+          <img src="img/store.jpg" alt="" />
+        </figure>
+        <figure class="food-item concept-slide" aria-hidden="true">
+          <img src="img/store1.jpg" alt="" />
+        </figure>
+        <figure class="food-item concept-slide" aria-hidden="true">
+          <img src="img/pubimage.png" alt="" />
+        </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -506,23 +582,48 @@
   <section class="section" id="cuisine">
     <div class="container">
       <div class="section-head fade">
-        <p class="en">Cuisine</p>
-        <h2>妥協なきキッチンから生まれる、本格の味。</h2>
+        <p class="en">Food & Drink</p>
+        <h2>食事ができる<span class="pc-br"></span><span class="sp-br"></span>良い酒が飲める</h2>
       </div>
-      <p class="cuisine-copy fade">フィリピン料理を中心に、
-シェフが腕を振るう一品一品。
+      <p class="cuisine-copy fade">それが、Bay NYXの誇りです。
 
-料理もまた、この店の主役です。</p>
-      <div class="food-grid fade">
-        <figure class="food-item">
+お好み焼き、焼きそば、チキンライス。
+定番の味を、丁寧に。
+
+そして全てのお客様に、
+生ハム、チーズ、手作りレーズンバター、
+フランス産チョコレートをサービスで。
+
+※初めてのお客様から
+「頼んでないのに…」と驚かれますが、
+全てサービスです。ご安心ください。
+
+"乾き物だけで高額請求"
+そんな店とは、一線を画します。
+
+ここは、本当に過ごせる場所。
+食事も、酒も、会話も、すべてが揃った空間です。</p>
+      <div class="food-carousel fade">
+        <div class="food-track">
+        <figure class="food-item food-slide">
           <img src="img/food1.jpg" alt="Bay NYX 料理写真1" />
         </figure>
-        <figure class="food-item">
+        <figure class="food-item food-slide">
           <img src="img/food2.jpg" alt="Bay NYX 料理写真2" />
         </figure>
-        <figure class="food-item">
+        <figure class="food-item food-slide">
           <img src="img/food3.jpg" alt="Bay NYX 料理写真3" />
         </figure>
+        <figure class="food-item food-slide" aria-hidden="true">
+          <img src="img/food1.jpg" alt="" />
+        </figure>
+        <figure class="food-item food-slide" aria-hidden="true">
+          <img src="img/food2.jpg" alt="" />
+        </figure>
+        <figure class="food-item food-slide" aria-hidden="true">
+          <img src="img/food3.jpg" alt="" />
+        </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -531,7 +632,7 @@
     <div class="container">
       <div class="section-head fade">
         <p class="en">Golden Cards</p>
-        <h2>夜を彩る、個性豊かな面々。</h2>
+        <h2>夜を彩る<span class="pc-br"></span><span class="sp-br"></span>個性豊かな面々</h2>
       </div>
       <p class="cast-copy fade">それぞれが一枚のカード。
 顔は見せずとも、その魅力は確かに。
