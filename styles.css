@@ -122,11 +122,34 @@
       position: relative;
       display: flex;
       align-items: center;
-      background-image:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.74)),
-        url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1800&q=80');
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg-slide {
+      position: absolute;
+      inset: 0;
       background-size: cover;
       background-position: center;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+    .hero-bg-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.74));
+      pointer-events: none;
+    }
+    .hero .container.hero-content {
+      position: relative;
+      z-index: 2;
     }
 
     .hero-content {
@@ -214,6 +237,25 @@
   background: linear-gradient(140deg, #111823, #0d1219);
   padding: 20px;
 }
+.carousel-shell {
+  position: relative;
+}
+.carousel-controls {
+  display: none;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.carousel-btn {
+  border: 1px solid var(--gold-soft);
+  background: #111823;
+  color: var(--gold);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
 .tab-buttons {
   display: flex;
   justify-content: center;
@@ -269,6 +311,17 @@
   inset: 0;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06));
 }
+.food-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  border: 1px dashed rgba(216, 179, 90, 0.45);
+  background: linear-gradient(140deg, #111722, #0d1219);
+}
 .food-caption {
   position: absolute;
   left: 10px;
@@ -293,6 +346,7 @@
   line-height: 1.4;
 }
 
+
 .service-trump-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -310,6 +364,14 @@
   justify-content: center;
   text-align: center;
   box-shadow: 0 0 22px rgba(216, 179, 90, 0.12);
+}
+.service-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  margin-bottom: 8px;
 }
 .service-rank {
   position: absolute;
@@ -357,6 +419,14 @@
   background: #111824;
   padding: 16px 14px;
   text-align: center;
+}
+.drink-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  margin-bottom: 8px;
 }
 .drink-card h4 {
   color: var(--muted);
@@ -590,7 +660,7 @@
   .map { min-height: 280px; }
 }
 
-    @media (max-width: 720px) {
+@media (max-width: 720px) {
       .nav-toggle { display: block; }
 
       .nav-menu {
@@ -615,6 +685,26 @@
   .drink-grid,
   .service-trump-grid {
     grid-template-columns: 1fr;
+  }
+  .mobile-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 10px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+  }
+  .mobile-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  .mobile-carousel > * {
+    flex: 0 0 100%;
+    max-width: 100%;
+    scroll-snap-align: start;
+  }
+  .carousel-controls {
+    display: flex;
   }
   .hero-catch,
   .section-head h2 {

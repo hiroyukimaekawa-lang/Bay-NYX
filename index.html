@@ -33,6 +33,13 @@
   </nav>
 
   <header class="hero" id="home">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-bg-slide active" style="background-image: url('img/store/store-image.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('img/store/store1.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('img/store/store2.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('img/store/store3.jpg')"></div>
+    </div>
+    <div class="hero-bg-overlay"></div>
     <div class="container hero-content fade">
       <h1 class="hero-catch">静寂に溶ける<span class="pc-br"></span><span class="sp-br"></span>本格の夜</h1>
       <p class="hero-sub">料理 空間 そして出会い<span class="pc-br"></span><span class="sp-br"></span>Bay NYXが紡ぐ 大人の時間</p>
@@ -46,33 +53,42 @@
         <h2>喧騒から離れた<span class="pc-br"></span><span class="sp-br"></span>特別な夜を</h2>
       </div>
       <div class="concept-wrap fade">
-        <p>Bay NYXは、一般的なフィリピンパブとは一線を画す、
+        <p>喧騒の町に佇む、特別な夜を。
+
+日本三大歓楽街のど真ん中。
+嫋やかな淑女たちが、あなたを迎える。
+
+Bay NYXは、一般的なフィリピンパブとは一線を画す、
 ラウンジスタイルの大人の社交場です。
 
-本格的な料理、洗練された空間、
-そして個性豊かなキャスト。
+アペリティフから始まり、本格的な料理へと続く夜。
+会話を邪魔しない音響。
+楽しさと癒しのフィリピンホスピタリティ。
 
+洗練された空間と、嫋やかな淑女たち。
+
+日常の一夜から祝賀会(バンケット)まで、
 すべてが調和した、上質な時間をご提供します。</p>
       </div>
       <div class="concept-gallery fade">
         <div class="concept-track">
         <figure class="food-item concept-slide">
-          <img src="img/store.jpg" alt="Bay NYX 店内カウンター" />
+          <img src="img/store/store-image.jpg" alt="Bay NYX 店内" />
         </figure>
         <figure class="food-item concept-slide">
-          <img src="img/store1.jpg" alt="Bay NYX 店内ボトル棚" />
+          <img src="img/store/store1.jpg" alt="Bay NYX 店内" />
         </figure>
         <figure class="food-item concept-slide">
-          <img src="img/pubimage.png" alt="Bay NYX 店内の雰囲気" />
+          <img src="img/store/store2.jpg" alt="Bay NYX 店内の雰囲気" />
         </figure>
         <figure class="food-item concept-slide" aria-hidden="true">
-          <img src="img/store.jpg" alt="" />
+          <img src="img/store/store-image.jpg" alt="" />
         </figure>
         <figure class="food-item concept-slide" aria-hidden="true">
-          <img src="img/store1.jpg" alt="" />
+          <img src="img/store/store1.jpg" alt="" />
         </figure>
         <figure class="food-item concept-slide" aria-hidden="true">
-          <img src="img/pubimage.png" alt="" />
+          <img src="img/store/store2.jpg" alt="" />
         </figure>
         </div>
       </div>
@@ -114,26 +130,63 @@
         </div>
 
         <div class="tab-content active" data-content="menu">
-          <div class="menu-photo-grid">
+          <div class="carousel-shell">
+          <div class="menu-photo-grid mobile-carousel" id="menuCarousel">
             <figure class="food-item">
               <img src="img/food1.jpg" alt="お好み焼き" />
               <figcaption class="food-caption"><strong>お好み焼き</strong><span>ふんわり 香ばしく / ¥1,200</span></figcaption>
             </figure>
             <figure class="food-item">
-              <img src="img/food2.jpg" alt="焼きそば" />
+              <img src="img/food/yakisoba.jpg" alt="焼きそば" />
               <figcaption class="food-caption"><strong>焼きそば</strong><span>定番の安心感 / ¥1,000</span></figcaption>
             </figure>
             <figure class="food-item">
-              <img src="img/food3.jpg" alt="チキンライス" />
+              <img src="img/food/chiken-rice.jpg" alt="チキンライス" />
               <figcaption class="food-caption"><strong>チキンライス</strong><span>やさしい一皿 / ¥1,500</span></figcaption>
             </figure>
+            <figure class="food-item">
+              <img src="img/food/cha-han.jpg" alt="炒飯" />
+              <figcaption class="food-caption"><strong>チャーハン</strong><span>香ばしい一品 / ¥1,200</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <img src="img/food/steak-a4.jpg" alt="ヒレステーキ" />
+              <figcaption class="food-caption"><strong>ヒレステーキ</strong><span>厳選A4ランク / ¥3,500</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <img src="img/food/jikaseianbata-.jpg" alt="自家製あんバターサンド" />
+              <figcaption class="food-caption"><strong>自家製あんバターサンド</strong><span>甘じょっぱい誘惑 / ¥800</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <div class="food-placeholder">PHOTO</div>
+              <figcaption class="food-caption"><strong>お茶漬け</strong><span>写真後日追加</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <div class="food-placeholder">PHOTO</div>
+              <figcaption class="food-caption"><strong>プチピザ</strong><span>写真後日追加</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <div class="food-placeholder">PHOTO</div>
+              <figcaption class="food-caption"><strong>生ハム、チーズ盛り合わせ</strong><span>写真後日追加</span></figcaption>
+            </figure>
+            <figure class="food-item">
+              <img src="img/food/chiken.jpg" alt="フライチキン" />
+              <figcaption class="food-caption"><strong>フライチキン（要予約）</strong><span>カリっとジューシー / 要予約</span></figcaption>
+            </figure>
+            </figure>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-btn" type="button" data-target="menuCarousel" data-dir="prev">前へ</button>
+            <button class="carousel-btn" type="button" data-target="menuCarousel" data-dir="next">次へ</button>
+          </div>
           </div>
         </div>
 
         <div class="tab-content" data-content="service">
-          <div class="service-trump-grid">
+          <div class="carousel-shell">
+          <div class="service-trump-grid mobile-carousel" id="serviceCarousel">
             <article class="service-trump-card">
               <span class="service-rank">A♦</span>
+              <img src="img/food5.jpg" alt="日替わり 生ハム" class="service-photo" />
               <span class="service-mark">◆</span>
               <h3>日替わり 生ハム</h3>
               <p>軽くつまめる塩味と香り</p>
@@ -141,6 +194,7 @@
             </article>
             <article class="service-trump-card">
               <span class="service-rank">K♦</span>
+              <img src="img/food6.jpg" alt="日替わり チーズ" class="service-photo" />
               <span class="service-mark">◇</span>
               <h3>日替わり チーズ</h3>
               <p>ワインに合う定番の一皿</p>
@@ -148,20 +202,44 @@
             </article>
             <article class="service-trump-card">
               <span class="service-rank">Q♦</span>
+              <img src="img/food7.jpg" alt="日替わり レーズンバターとチョコ" class="service-photo" />
               <span class="service-mark">♢</span>
               <h3>日替わり レーズンバター & チョコ</h3>
               <p>甘味とコクのアクセント</p>
               <span class="service-badge">サービス</span>
             </article>
           </div>
+          <div class="carousel-controls">
+            <button class="carousel-btn" type="button" data-target="serviceCarousel" data-dir="prev">前へ</button>
+            <button class="carousel-btn" type="button" data-target="serviceCarousel" data-dir="next">次へ</button>
+          </div>
+          </div>
         </div>
 
         <div class="tab-content" data-content="drink">
-          <div class="drink-grid">
-            <article class="drink-card"><h4>ハウスボトル</h4><p>¥8,000〜</p></article>
-            <article class="drink-card"><h4>シャンパン</h4><p>¥15,000〜</p></article>
-            <article class="drink-card"><h4>生ビール</h4><p>¥800</p></article>
-            <article class="drink-card"><h4>カクテル各種</h4><p>¥1,000〜</p></article>
+          <div class="carousel-shell">
+          <div class="drink-grid mobile-carousel" id="drinkCarousel">
+            <article class="drink-card">
+              <img src="img/alc.png" alt="ハウスボトル" class="drink-photo" />
+              <h4>ハウスボトル</h4><p>¥8,000〜</p>
+            </article>
+            <article class="drink-card">
+              <img src="img/alc1.png" alt="シャンパン" class="drink-photo" />
+              <h4>シャンパン</h4><p>¥15,000〜</p>
+            </article>
+            <article class="drink-card">
+              <img src="img/alc2.png" alt="生ビール" class="drink-photo" />
+              <h4>生ビール</h4><p>¥800</p>
+            </article>
+            <article class="drink-card">
+              <img src="img/alc.png" alt="カクテル各種" class="drink-photo" />
+              <h4>カクテル各種</h4><p>¥1,000〜</p>
+            </article>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-btn" type="button" data-target="drinkCarousel" data-dir="prev">前へ</button>
+            <button class="carousel-btn" type="button" data-target="drinkCarousel" data-dir="next">次へ</button>
+          </div>
           </div>
         </div>
       </div>
@@ -326,6 +404,17 @@ JR京浜東北線 関内駅 徒歩5分
     const navMenu = document.getElementById('navMenu');
     const backTop = document.getElementById('backTop');
 
+    (function heroBgSlideshow() {
+      const slides = document.querySelectorAll('.hero-bg-slide');
+      if (slides.length <= 1) return;
+      let i = 0;
+      setInterval(function () {
+        slides[i].classList.remove('active');
+        i = (i + 1) % slides.length;
+        slides[i].classList.add('active');
+      }, 5000);
+    })();
+
     window.addEventListener('scroll', () => {
       navbar.classList.toggle('scrolled', window.scrollY > 40);
       backTop.classList.toggle('show', window.scrollY > 520);
@@ -380,6 +469,18 @@ JR京浜東北線 関内駅 徒歩5分
         tabContents.forEach((content) => {
           content.classList.toggle('active', content.dataset.content === key);
         });
+      });
+    });
+
+    document.querySelectorAll('.carousel-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        const firstItem = target.children[0];
+        const gap = 12;
+        const step = firstItem ? firstItem.getBoundingClientRect().width + gap : target.clientWidth;
+        const dir = btn.dataset.dir === 'prev' ? -1 : 1;
+        target.scrollBy({ left: step * dir, behavior: 'smooth' });
       });
     });
 
