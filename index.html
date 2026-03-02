@@ -54,7 +54,7 @@
         <h2>喧騒から離れた<span class="pc-br"></span><span class="sp-br"></span>特別な夜を</h2>
       </div>
       <div class="concept-wrap fade">
-        <p class="pc-only">喧騒の町に佇む、特別な夜を。<br><br>
+        <p class="pc-only">喧騒の町に佇む、特別な夜を。<br>
 日本三大歓楽街のど真ん中。<br>
 嫋やかな淑女たちが、あなたを迎える。<br><br>
 Bay NYXは、一般的なフィリピンパブとは一線を画す、<br>
@@ -68,15 +68,14 @@ Bay NYXは、一般的なフィリピンパブとは一線を画す、<br>
         <p class="sp-only">喧騒の町に佇む、特別な夜を。<br><br>
 日本三大歓楽街のど真ん中。<br>
 嫋やかな淑女たちが、あなたを迎える。<br><br>
-Bay NYXは、一般的なフィリピンパブとは一線を画す、<br>
-ラウンジスタイルの大人の社交場です。<br><br>
+Bay NYXは一般的な<br>フィリピンパブとは一線を画す<br>
+ラウンジスタイルの大人の社交場です<br><br>
 アペリティフから始まり、<br>
 本格的な料理へと続く夜。<br>
 会話を邪魔しない音響。<br>
-楽しさと癒しのフィリピンホスピタリティ。<br><br>
+楽しさと癒しの<br>フィリピンホスピタリティ。<br><br>
 洗練された空間と、嫋やかな淑女たち。<br><br>
-日常の一夜から祝賀会(バンケット)まで、<br>
-すべてが調和した、上質な時間をご提供します。</p>
+日常の一夜から祝賀会まで、すべてが<br>調和した、上質な時間をご提供します。</p>
       </div>
       <div class="concept-gallery fade">
         <div class="concept-track">
@@ -128,8 +127,7 @@ Bay NYXは、一般的なフィリピンパブとは一線を画す、<br>
           <p class="en">Food & Drink</p>
           <h2>食事ができる<span class="pc-br"></span><span class="sp-br"></span>良い酒が飲める</h2>
         </div>
-        <p class="cuisine-copy pc-only">食事ができる<br>
-良い酒が飲める<br>
+        <p class="cuisine-copy pc-only">食事ができる良い酒が飲める<br>
 それが、Bay NYXの誇りです。<br><br>
 他店にはない、自店キッチンで仕上げる料理。<br>
 作り置きではなく、注文を受けてから作る温かさを味わいください<br><br>
@@ -143,23 +141,16 @@ Bay NYXは、一般的なフィリピンパブとは一線を画す、<br>
 ベイニュクスは<br>
 食事も、酒も、会話も、すべてが揃った空間です。<br>
 気兼ねなくご堪能ください</p>
-        <p class="cuisine-copy sp-only">食事ができる<br>
-良い酒が飲める<br>
-それが、Bay NYXの誇りです。<br><br>
-他店にはない、<br>
-自店キッチンで仕上げる料理。<br>
-作り置きではなく、<br>
-注文を受けてから作る温かさを味わいください<br><br>
-そして全てのお客様に、<br>
+        <p class="cuisine-copy sp-only">食事ができる良い酒が飲める<br>それが、Bay NYXの誇りです。<br><br>
+他店にはない自店キッチンで仕上げる料理<br>
+作り置きではなく、注文を受けてから作る<br>温かさを味わいください<br><br>
+そして全てのお客様に<br>
 生ハム、チーズ、手作りレーズンバター、<br>
 フランス産チョコレートをサービスで。<br><br>
-※初めてのお客様は<br>
-「頼んでないのに…」と驚かれますが、<br>
-これもおもてなし。全てサービスです。<br><br>
+※初めてのお客様は「頼んでないのに…」と驚かれますが、これもおもてなし。<br>全てサービスです。<br><br>
 お値段以上の食事を会話とお酒と共に<br>
 お楽しみください<br><br>
-ベイニュクスは<br>
-食事も、酒も、会話も、<br>
+ベイニュクスは食事も、酒も、会話も、<br>
 すべてが揃った空間です。<br>
 気兼ねなくご堪能ください</p>
         <a class="food-service-jump" href="service.html">サービス一覧はこちら</a>
@@ -370,11 +361,13 @@ JR京浜東北線 関内駅 徒歩5分
 
     navToggle.addEventListener('click', () => {
       navMenu.classList.toggle('active');
+      navToggle.classList.toggle('active');
     });
 
     document.querySelectorAll('.nav-menu a').forEach((link) => {
       link.addEventListener('click', () => {
         navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
       });
     });
 
@@ -427,7 +420,10 @@ JR京浜東北線 関内駅 徒歩5分
 
     window.addEventListener('load', setActiveNav);
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') navMenu.classList.remove('active');
+      if (e.key === 'Escape') {
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
+      }
     });
   </script>
 </body>
