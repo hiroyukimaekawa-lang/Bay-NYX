@@ -49,6 +49,8 @@
     }
     .pc-br { display: block; }
     .sp-br { display: none; }
+    .pc-only { display: block; }
+    .sp-only { display: none; }
 
     .navbar {
       position: fixed;
@@ -217,7 +219,8 @@
     .concept-wrap p {
       color: var(--muted);
       font-size: 0.95rem;
-      white-space: pre-line;
+      white-space: normal;
+      text-align: center;
     }
 
 .food-message {
@@ -228,7 +231,24 @@
   color: var(--muted);
   max-width: 860px;
   margin: 0 auto;
-  white-space: pre-line;
+  white-space: normal;
+}
+.food-service-jump {
+  display: block;
+  width: fit-content;
+  margin: 18px auto 0;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-soft);
+  color: var(--gold);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  transition: 0.25s ease;
+}
+.food-service-jump:hover {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #221707;
 }
 
 .food-tabs {
@@ -237,55 +257,67 @@
   background: linear-gradient(140deg, #111823, #0d1219);
   padding: 20px;
 }
-.carousel-shell {
-  position: relative;
+.food-mobile-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
 }
-.carousel-controls {
-  display: none;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-.carousel-btn {
-  border: 1px solid var(--gold-soft);
-  background: #111823;
-  color: var(--gold);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-}
-.tab-buttons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-.tab-btn {
-  background: transparent;
-  color: var(--muted);
+.food-overview-section {
   border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(140deg, #121a25, #0d1219);
+  padding: 18px;
+}
+.food-link-card {
+  position: relative;
+  overflow: hidden;
+}
+.food-link-rank {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1;
+}
+.food-link-mark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--gold);
+  font-size: 1rem;
+}
+.food-overview-title {
+  font-family: var(--serif);
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin: 18px 0 12px;
+  letter-spacing: 0.08em;
+}
+.food-overview-text {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.75;
+  margin: 0;
+}
+.food-detail-link {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 8px 18px;
+  border: 1px solid var(--gold-soft);
+  background: transparent;
+  color: var(--gold);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
   border-radius: 999px;
-  padding: 9px 14px;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
   cursor: pointer;
   transition: 0.25s ease;
 }
-.tab-btn.active,
-.tab-btn:hover {
-  color: #1a1305;
+.food-detail-link:hover {
   background: var(--gold);
+  color: #1a1305;
   border-color: var(--gold);
-}
-
-.tab-content {
-  display: none;
-}
-.tab-content.active {
-  display: block;
 }
 
 .food-grid {
@@ -407,10 +439,14 @@
   letter-spacing: 0.08em;
   padding: 4px 10px;
 }
+.service-no-photo {
+  min-height: auto;
+  padding: 20px 14px;
+}
 
 .drink-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 .drink-card {
@@ -438,6 +474,17 @@
   color: var(--gold);
   font-size: 1.45rem;
   line-height: 1.2;
+}
+.drink-card.drink-text-only p {
+  font-family: var(--sans);
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.drink-card.drink-text-only h4 {
+  color: var(--gold);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
 }
 
     .cast {
@@ -649,6 +696,7 @@
   .section { padding: 78px 0; }
   .nav-tel { display: none; }
   .concept-slide { flex-basis: calc((100vw - 60px) / 2); }
+  .food-mobile-overview { grid-template-columns: 1fr 1fr; }
   .menu-photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .food-grid,
   .drink-grid,
@@ -661,6 +709,51 @@
 }
 
 @media (max-width: 720px) {
+  .food-service-jump {
+    position: relative;
+    display: flex;
+    width: min(210px, 88vw);
+    min-height: 68px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px 22px;
+    border-radius: 12px;
+    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    background: linear-gradient(155deg, #1f1709, #101621 55%, #141c29);
+    border: 1px solid rgba(216, 179, 90, 0.45);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+    touch-action: manipulation;
+  }
+  .food-service-jump::before,
+  .food-service-jump::after {
+    position: absolute;
+    color: var(--gold);
+    font-family: var(--serif);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    opacity: 0.9;
+  }
+  .food-service-jump::before {
+    content: "A 🍴";
+    top: 7px;
+    left: 8px;
+  }
+  .food-service-jump::after {
+    content: "K 🍽";
+    right: 8px;
+    bottom: 7px;
+    transform: rotate(180deg);
+  }
+  .food-tabs {
+    display: none;
+  }
+  .food-mobile-overview {
+    grid-template-columns: 1fr;
+  }
+
       .nav-toggle { display: block; }
 
       .nav-menu {
@@ -680,32 +773,6 @@
 
   .nav-menu.active { left: 0; }
   .concept-slide { flex-basis: 82vw; max-width: none; }
-  .food-grid,
-  .menu-photo-grid,
-  .drink-grid,
-  .service-trump-grid {
-    grid-template-columns: 1fr;
-  }
-  .mobile-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 10px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: 4px;
-  }
-  .mobile-carousel::-webkit-scrollbar {
-    display: none;
-  }
-  .mobile-carousel > * {
-    flex: 0 0 100%;
-    max-width: 100%;
-    scroll-snap-align: start;
-  }
-  .carousel-controls {
-    display: flex;
-  }
   .hero-catch,
   .section-head h2 {
     letter-spacing: 0.02em;
@@ -713,6 +780,8 @@
       }
       .pc-br { display: none; }
       .sp-br { display: block; }
+      .pc-only { display: none; }
+      .sp-only { display: block; }
       .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .card { height: 230px; }
     }
