@@ -105,58 +105,43 @@
       letter-spacing: .05em;
     }
 
-    .price-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-    .price-card {
-      background: linear-gradient(145deg, #141c28, #0f141d);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 18px;
-    }
-    .price-card h3 {
-      font-size: .88rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .price {
-      font-family: var(--serif);
-      color: var(--gold);
-      font-size: 2rem;
-      line-height: 1.2;
-      margin-bottom: 6px;
-    }
-    .desc {
-      font-size: .82rem;
-      color: var(--muted);
-    }
-
-    .table-wrap {
+    .price-text {
       background: #111823;
       border: 1px solid var(--line);
       border-radius: 12px;
-      overflow: hidden;
+      padding: 16px;
     }
-    table { width: 100%; border-collapse: collapse; }
-    th, td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      font-size: .9rem;
-      text-align: left;
+    .price-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
-    th {
+    .price-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px dotted rgba(255,255,255,.24);
+      padding: 12px 4px;
+      font-size: 1.05rem;
+      color: #e3e7ed;
+    }
+    .price-list li:last-child {
+      border-bottom: none;
+    }
+    .dot {
       color: var(--gold);
-      font-weight: 500;
-      letter-spacing: .06em;
-      background: rgba(214,177,90,.06);
+      font-size: .9rem;
+      line-height: 1;
     }
-    td { color: #d8dee7; }
-    tr:last-child td { border-bottom: 0; }
+    .label {
+      flex: 1 1 auto;
+      color: #e3e7ed;
+    }
+    .value {
+      flex: 0 0 auto;
+      color: #f6f8fb;
+      font-weight: 500;
+    }
 
     .notes {
       margin-top: 14px;
@@ -229,7 +214,6 @@
     }
 
     @media (max-width: 820px) {
-      .price-grid,
       .store-info { grid-template-columns: 1fr; }
     }
 
@@ -237,8 +221,7 @@
       .menu { gap: 10px; }
       .menu a { font-size: .6rem; }
       .hero { padding-top: 62px; }
-      th, td { padding: 12px; font-size: .82rem; }
-      .price { font-size: 1.7rem; }
+      .price-list li { font-size: .94rem; }
     }
   </style>
 </head>
@@ -265,72 +248,19 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head"><h2>Set Plan</h2></div>
-      <div class="price-grid">
-        <article class="price-card">
-          <h3>60 min</h3>
-          <p class="price">¥5,000</p>
-          <p class="desc">1ドリンク + チャージ</p>
-        </article>
-        <article class="price-card">
-          <h3>90 min</h3>
-          <p class="price">¥7,000</p>
-          <p class="desc">1ドリンク + チャージ</p>
-        </article>
+      <div class="section-head"><h2>料金表</h2></div>
+      <div class="price-text">
+        <ul class="price-list">
+          <li><span class="dot">●</span><span class="label">セット料金【70分】</span><span class="value">4,000円</span></li>
+          <li><span class="dot">●</span><span class="label">延長料金【30分】</span><span class="value">2,000円</span></li>
+          <li><span class="dot">●</span><span class="label">指名料金</span><span class="value">3,000円</span></li>
+          <li><span class="dot">●</span><span class="label">場内指名</span><span class="value">3,000円</span></li>
+          <li><span class="dot">●</span><span class="label">税・サービス料</span><span class="value">なし</span></li>
+          <li><span class="dot">●</span><span class="label">クレジットカード</span><span class="value">各種取り扱い可能</span></li>
+        </ul>
       </div>
-      <div class="price-grid">
-        <article class="price-card">
-          <h3>120 min</h3>
-          <p class="price">¥9,000</p>
-          <p class="desc">1ドリンク + チャージ</p>
-        </article>
-        <article class="price-card">
-          <h3>延長 30 min</h3>
-          <p class="price">¥3,000</p>
-          <p class="desc">状況によりご案内いたします</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head"><h2>Drink / Option</h2></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>項目</th>
-              <th>料金</th>
-              <th>備考</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>ハウスボトル</td>
-              <td>¥8,000〜</td>
-              <td>銘柄により変動</td>
-            </tr>
-            <tr>
-              <td>シャンパン</td>
-              <td>¥15,000〜</td>
-              <td>在庫・銘柄要確認</td>
-            </tr>
-            <tr>
-              <td>カラオケ</td>
-              <td>¥1,000</td>
-              <td>歌い放題</td>
-            </tr>
-            <tr>
-              <td>VIP席</td>
-              <td>¥2,000</td>
-              <td>1組 / 1セット</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="notes">※ 表示価格は税込です。
-※ サービス内容・料金は営業状況により変更となる場合があります。
+      <p class="notes">※ 領収書が必要な場合はスタッフまでお申し付けください。
+※ 料金・内容は営業状況により変更となる場合があります。
 ※ 詳細は来店時またはお電話でご確認ください。</p>
     </div>
   </section>
@@ -344,7 +274,7 @@
           <p>神奈川県横浜市中区福富町仲通4-5
 和光中央ビル2階
 
-営業時間：8:00~12:00 / 20:00~24:00
+営業時間：20:00~24:00
 定休日：日曜・祝日</p>
         </article>
         <article class="info-card">
