@@ -838,9 +838,84 @@
       .pc-only { display: none; }
       .sp-only { display: block; }
       .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .card { height: 400px; }
+      .card { height: 280px; }
+      .symbol { font-size: 2.2rem; }
+      .rank { font-size: 0.85rem; top: 8px; left: 8px; }
+      .rank.bottom { right: 8px; bottom: 8px; }
+      .title { font-size: 0.7rem; }
     }
 
 @media (prefers-reduced-motion: reduce) {
   .concept-track { animation: none; }
+}
+
+/* ---- Specific UI Additions ---- */
+
+.hero-cta {
+  margin-top: 40px;
+}
+.hero-btn {
+  display: inline-block;
+  padding: 16px 42px;
+  background-color: transparent;
+  border: 1px solid #c5a059;
+  color: #ffffff;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  font-family: var(--serif);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.hero-btn:hover {
+  background-color: #c5a059;
+  color: var(--bg);
+  box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+}
+
+.sp-only-flex {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sp-only-flex {
+    display: flex;
+  }
+  
+  .sp-fixed-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(26, 26, 26, 0.92);
+    backdrop-filter: blur(10px);
+    z-index: 900;
+    border-top: 2px solid #c5a059;
+  }
+  
+  .sp-fixed-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    font-family: var(--serif);
+  }
+  
+  .sp-fixed-system {
+    border-right: 1px solid rgba(197, 160, 89, 0.4);
+  }
+  
+  /* Adjusted Back to Top Button */
+  .back-top {
+    bottom: 80px;
+    z-index: 901;
+  }
+  
+  /* Extra bottom padding to avoid hidden content under fixed nav */
+  body {
+    padding-bottom: 60px;
+  }
 }
