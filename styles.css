@@ -535,7 +535,7 @@
 
     .card {
       position: relative;
-      height: 450px;
+      height: 400px;
       transform-style: preserve-3d;
       transition: transform 0.62s ease;
     }
@@ -642,7 +642,7 @@
     .card-back h3 {
       font-family: var(--serif);
       color: var(--gold);
-      font-size: 1.25rem;
+      font-size: 1rem;
       line-height: 1.2;
       text-wrap: balance;
       word-break: keep-all;
@@ -650,14 +650,14 @@
 
     .card-back p {
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.78rem;
     }
 
     .insta {
       border: 1px solid var(--gold-soft);
       border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 0.75rem;
+      padding: 5px 10px;
+      font-size: 0.68rem;
       color: var(--gold);
       transition: background 0.2s ease, color 0.2s ease;
     }
@@ -712,6 +712,31 @@
       text-align: center;
       color: #98a2b2;
       font-size: 0.84rem;
+    }
+
+    .footer-sitemap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 20px;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+
+    .footer-sitemap a {
+      color: #98a2b2;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-sitemap a:hover {
+      color: var(--gold);
+    }
+
+    .footer-copyright {
+      margin: 0;
     }
 
     .back-top {
@@ -838,11 +863,14 @@
       .pc-only { display: none; }
       .sp-only { display: block; }
       .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .card { height: 280px; }
-      .symbol { font-size: 2.2rem; }
-      .rank { font-size: 0.85rem; top: 8px; left: 8px; }
+      /* ※動画・画像付きカードが増えた場合は repeat(1, 1fr) に変更を検討 */
+      .card { height: 320px; }
+      .symbol { font-size: 2rem; }
+      .rank { font-size: 0.78rem; top: 8px; left: 8px; }
       .rank.bottom { right: 8px; bottom: 8px; }
-      .title { font-size: 0.7rem; }
+      .title { font-size: 0.62rem; }
+      .card-back h3 { font-size: 0.85rem; }
+      .card-back p { font-size: 0.7rem; }
     }
 
 @media (prefers-reduced-motion: reduce) {

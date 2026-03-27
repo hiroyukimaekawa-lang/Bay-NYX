@@ -338,6 +338,27 @@
       padding: 24px 0;
       background: #090d13;
     }
+    .footer-sitemap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 20px;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+    .footer-sitemap a {
+      color: #98a2b2;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s ease;
+    }
+    .footer-sitemap a:hover {
+      color: var(--gold);
+    }
+    .footer-copyright {
+      margin: 0;
+    }
 
     @media (max-width: 680px) {
       .menu {
@@ -353,12 +374,16 @@
       }
 
       .menu-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;  /* ← 2列→1列に変更 */
       }
 
       .service-grid,
       .drink-grid {
         grid-template-columns: 1fr;
+      }
+
+      .menu-thumb {
+        height: 240px;  /* ← SP時の写真高さを少し上げる */
       }
     }
   </style>
@@ -546,7 +571,20 @@
     </div>
   </section>
 
-  <footer class="footer">© 2025 Bay NYX. All Rights Reserved.</footer>
+  <footer class="footer">
+    <div class="container footer-container">
+      <ul class="footer-sitemap">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="system.html">System</a></li>
+        <li><a href="service.html">Service</a></li>
+        <li><a href="index.html#concept">Philosophy</a></li>
+        <li><a href="index.html#cuisine">Food & Drink</a></li>
+        <li><a href="index.html#cast">Golden Cards</a></li>
+        <li><a href="index.html#access">Access</a></li>
+      </ul>
+      <p class="footer-copyright">© 2025 Bay NYX. All Rights Reserved.</p>
+    </div>
+  </footer>
 </body>
 
 </html>
