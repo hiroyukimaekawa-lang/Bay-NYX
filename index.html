@@ -319,101 +319,7 @@
       </div>
 
       <div id="specialGuestGrid" class="cast-grid fade" style="display: none; margin-top: 32px;">
-        <article class="cast-item" tabindex="0">
-          <div class="card">
-            <div class="card-face card-front">
-              <span class="rank">5<br />♥</span>
-              <span class="symbol">♥</span>
-              <span class="title">SPECIAL GUEST</span>
-              <span class="rank bottom">5<br />♥</span>
-            </div>
-            <div class="card-face card-back">
-              <h3>SPECIAL GUEST</h3>
-              <p>期間限定キャスト</p>
-              <a class="insta" href="https://www.instagram.com/baynyx_official?igsh=MWtneDJiMWpkOHYzeQ%3D%3" target="_blank" rel="noopener">公式Instagram</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="cast-item" tabindex="0">
-          <div class="card">
-            <div class="card-face card-front">
-              <span class="rank">6<br />♥</span>
-              <span class="symbol">♥</span>
-              <span class="title">SPECIAL GUEST</span>
-              <span class="rank bottom">6<br />♥</span>
-            </div>
-            <div class="card-face card-back">
-              <h3>SPECIAL GUEST</h3>
-              <p>期間限定キャスト</p>
-              <a class="insta" href="https://www.instagram.com/baynyx_official?igsh=MWtneDJiMWpkOHYzeQ%3D%3" target="_blank" rel="noopener">公式Instagram</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="cast-item" tabindex="0">
-          <div class="card">
-            <div class="card-face card-front">
-              <span class="rank">7<br />♥</span>
-              <span class="symbol">♥</span>
-              <span class="title">SPECIAL GUEST</span>
-              <span class="rank bottom">7<br />♥</span>
-            </div>
-            <div class="card-face card-back">
-              <h3>SPECIAL GUEST</h3>
-              <p>期間限定キャスト</p>
-              <a class="insta" href="https://www.instagram.com/baynyx_official?igsh=MWtneDJiMWpkOHYzeQ%3D%3" target="_blank" rel="noopener">公式Instagram</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="cast-item" tabindex="0">
-          <div class="card">
-            <div class="card-face card-front">
-              <span class="rank">8<br />♥</span>
-              <span class="symbol">♥</span>
-              <span class="title">SPECIAL GUEST</span>
-              <span class="rank bottom">8<br />♥</span>
-            </div>
-            <div class="card-face card-back">
-              <h3>SPECIAL GUEST</h3>
-              <p>期間限定キャスト</p>
-              <a class="insta" href="https://www.instagram.com/baynyx_official?igsh=MWtneDJiMWpkOHYzeQ%3D%3" target="_blank" rel="noopener">公式Instagram</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="cast-item" tabindex="0">
-          <div class="card">
-            <div class="card-face card-front">
-              <span class="rank">9<br />♥</span>
-              <span class="symbol">♥</span>
-              <span class="title">SPECIAL GUEST</span>
-              <span class="rank bottom">9<br />♥</span>
-            </div>
-            <div class="card-face card-back">
-              <h3>SPECIAL GUEST</h3>
-              <p>期間限定キャスト</p>
-              <a class="insta" href="https://www.instagram.com/baynyx_official?igsh=MWtneDJiMWpkOHYzeQ%3D%3" target="_blank" rel="noopener">公式Instagram</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="cast-item" tabindex="0">
-          <div class="card">
-            <div class="card-face card-front">
-              <span class="rank">10<br />♥</span>
-              <span class="symbol">♥</span>
-              <span class="title">SPECIAL GUEST</span>
-              <span class="rank bottom">10<br />♥</span>
-            </div>
-            <div class="card-face card-back">
-              <h3>SPECIAL GUEST</h3>
-              <p>期間限定キャスト</p>
-              <a class="insta" href="https://www.instagram.com/baynyx_official?igsh=MWtneDJiMWpkOHYzeQ%3D%3" target="_blank" rel="noopener">公式Instagram</a>
-            </div>
-          </div>
-        </article>
+        <!-- 動的に追加されます -->
       </div>
     </div>
   </section>
@@ -579,6 +485,85 @@
         }
       });
     }
+
+    // --- microCMSからの期間限定キャストデータ取得 ---
+    const MICROCMS_API_KEY = 'LJJID0Ahj0JhYw2r1qxu7wHKYxQqXYhCsqg9'; // ※実際のAPIキー
+    const MICROCMS_SERVICE_DOMAIN = 'l9pawk28o1';
+    const MICROCMS_ENDPOINT = 'baynyx';
+
+    async function fetchSpecialGuests() {
+      try {
+        const response = await fetch(`https://${MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/${MICROCMS_ENDPOINT}`, {
+          headers: {
+            'X-MICROCMS-API-KEY': MICROCMS_API_KEY
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`microCMS API Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        renderSpecialGuests(data.contents);
+      } catch (error) {
+        console.error('期間限定キャストの取得に失敗しました:', error);
+      }
+    }
+
+    function renderSpecialGuests(guests) {
+      const grid = document.getElementById('specialGuestGrid');
+      if (!grid) return;
+
+      grid.innerHTML = ''; // 中身をクリア
+
+      guests.forEach((guest, index) => {
+        const rankNumber = 5 + index; // 5, 6, 7...と連番を付与
+        const rankSymbol = '♥';
+
+        // 写真のHTML生成
+        const photoHtml = guest.photo && guest.photo.url
+          ? `<img src="${guest.photo.url}" alt="${guest.name}" />`
+          : '';
+
+        // InstagramリンクのHTML生成
+        const instaHtml = guest.instagram_url
+          ? `<a class="insta" href="${guest.instagram_url}" target="_blank" rel="noopener">公式Instagram</a>`
+          : '';
+
+        const article = document.createElement('article');
+        article.className = 'cast-item fade show'; // 既にフェードイン済みの状態にするか、オブザーバーに任せる
+        article.tabIndex = 0;
+
+        article.innerHTML = `
+          <div class="card">
+            <div class="card-face card-front">
+              <span class="rank">${rankNumber}<br />${rankSymbol}</span>
+              <span class="symbol">${rankSymbol}</span>
+              <span class="title">${guest.name}</span>
+              <span class="rank bottom">${rankNumber}<br />${rankSymbol}</span>
+            </div>
+            <div class="card-face card-back">
+              ${photoHtml}
+              <h3>${guest.name}</h3>
+              <p>${guest.description || ''}</p>
+              ${instaHtml}
+            </div>
+          </div>
+        `;
+
+        // タッチデバイス（スマートフォンなど）でタップ時に裏返る処理を適用
+        article.addEventListener('click', () => {
+          if (window.matchMedia('(hover: none)').matches) {
+            article.classList.toggle('is-flipped');
+          }
+        });
+
+        grid.appendChild(article);
+      });
+    }
+
+    // ページ読み込み時にデータを取得する
+    window.addEventListener('load', fetchSpecialGuests);
   </script>
 </body>
 
