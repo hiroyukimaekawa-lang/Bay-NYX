@@ -199,7 +199,6 @@ Serviceページの「料理メニュー」に表示されます。
 | NICOLE | `img/personal/NICOLE.mp4` |
 | ROMA | `img/personal/ROMA.mp4` |
 | AYA | `img/personal/aya.mp4` |
-| kana（カナ） | `img/personal/kana.mp4` |
 | RAIKA（ライカ） | `img/personal/ryca.mp4` |
 
 > ⚠️ **上記のキャストは、microCMSで写真を登録しても動画のほうが優先して表示されます。**
