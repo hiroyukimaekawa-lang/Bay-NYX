@@ -1,0 +1,9 @@
+# Cloudflare Pages のローカル用環境変数（APIキーを含むためコミット禁止）
+.dev.vars
+
+# macOS
+.DS_Store
+
+# 依存パッケージ / ビルド生成物
+node_modules/
+.wrangler/

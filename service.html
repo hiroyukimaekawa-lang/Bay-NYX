@@ -423,7 +423,10 @@
         <p class="en">Food Menu</p>
         <h2>料理メニュー</h2>
       </div>
-      <div class="menu-grid">
+      <!-- microCMSに料理(content_type = food)が1件以上あれば、
+           以下のカードはmicroCMSの内容に差し替わります。
+           取得できなかった場合は、この既存の内容がそのまま表示されます。 -->
+      <div class="menu-grid" id="foodGrid">
         <article class="menu-card">
           <div class="menu-thumb"><img src="img/food/okonomiyaki.png" alt="お好み焼き"></div>
           <div class="menu-body">
@@ -591,6 +594,10 @@
       <p class="footer-copyright">© 2025 Bay NYX. All Rights Reserved.</p>
     </div>
   </footer>
+
+  <!-- microCMSから料理を取得して表示します。
+       APIキーはサーバー側(/api/baynyx)が持つため、ここには書きません。 -->
+  <script src="cms-content.js" defer></script>
 </body>
 
 </html>
