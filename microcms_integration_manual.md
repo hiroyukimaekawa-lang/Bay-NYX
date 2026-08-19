@@ -145,11 +145,22 @@ window.addEventListener('load', fetchSpecialGuests);
 
 ---
 
-## 4. Netlify（ホスティングサーバー）でのWebhook連携設定
+## 4. ホスティング（Cloudflare Pages）について
 
-HTMLやJSの設定が完了したら、microCMS上で記事を追加・更新したタイミングで、自動的にお客様のサイトが最新状態に書き換わるように設定します。
+Bay NYX の本番環境は **Cloudflare Pages** です。
+設定手順は [`CLOUDFLARE_SETUP.md`](CLOUDFLARE_SETUP.md) を参照してください。
 
-1. **Netlify側:** 管理画面の `Site configuration` > `Build & deploy` > `Build hooks` にてフックURL（Webhook用URL）を発行・コピーします。
-2. **microCMS側:** 管理画面の右上の `API設定` > `Webhook` にて、「カスタム通知」またはNetlify連携用メニューを追加し、トリガー（コンテンツの公開・非公開など）にチェックを入れて先ほどのフックURLを貼り付けます。
+### Webhookは不要です
 
-これで、microCMSで情報を更新するたびにサイトへ自動反映されるようになります。
+このサイトは、ブラウザが表示のたびに `/api/baynyx` を経由して
+microCMSの内容を取得する方式です。
+
+そのため **microCMSで公開すれば、再ビルドなしでサイトへ反映されます。**
+Webhookやビルドフックの設定は必要ありません
+（反映まで最大5分ほどキャッシュされます）。
+
+HTML・CSSそのものを変更したときだけ、GitHub の `main` へ push すると
+Cloudflare Pages が自動で再デプロイします。
+
+> 旧環境の `https://baynyx.netlify.app/` は、
+> Cloudflare Pages の動作確認が完了するまで残しています。

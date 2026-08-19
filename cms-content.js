@@ -119,7 +119,16 @@
     // content_type が未設定の既存データは special_guest として扱う（後方互換）
     var type = toText(record.content_type).toLowerCase() || 'special_guest';
 
-    var order = Number(record.sort_order);
+    // sort_order は null / undefined / 空文字 / 数値にできない値を「未設定」とみなし、
+    // Number.POSITIVE_INFINITY にして必ず最後尾へ回す（0 や NaN と混同しない）
+    var rawOrder = record.sort_order;
+    var order;
+    if (rawOrder === null || rawOrder === undefined || toText(rawOrder) === '') {
+      order = Number.POSITIVE_INFINITY;
+    } else {
+      order = Number(rawOrder);
+      if (!isFinite(order)) order = Number.POSITIVE_INFINITY;
+    }
 
     return {
       type: type,
@@ -131,7 +140,7 @@
       socialLabel: toText(record.social_label),
       cardRank: toText(record.card_rank),
       cardSymbol: toText(record.card_symbol),
-      sortOrder: isFinite(order) ? order : Number.POSITIVE_INFINITY,
+      sortOrder: order,
       // is_visible 未設定（undefined / null）は「表示する」
       visible: record.is_visible === false ? false : true,
     };
@@ -150,36 +159,61 @@
     return toText(value).toLowerCase();
   }
 
+  /** 「A<br>♠」のような要素から先頭のテキスト（A）だけを取り出す */
+  function firstTextOf(el) {
+    if (!el) return '';
+    var node = el.firstChild;
+    return node && node.nodeType === 3 ? toText(node.nodeValue) : toText(el.textContent);
+  }
+
   /**
-   * 差し替え前のHTMLを走査して「名前 → 既存の画像/動画」の対応表を作る。
+   * 差し替え前のHTMLを走査して、静的カードの一覧と「名前 → 既存カード」の対応表を作る。
+   *
+   * 画像・動画だけでなく、カードの数字・記号・見出し・紹介文・SNSリンクも退避する。
+   * microCMS側の項目が空のときに、既存デザインをそのまま引き継ぐために使う。
    *
    * @param {Element} container 静的カードが入っている要素
    * @param {string}  itemSelector カード1枚のセレクタ
    * @param {string[]} nameSelectors 名前が書かれている要素のセレクタ（複数可）
+   * @returns {{map: Object, list: Array}} map=名前→カード / list=HTMLに並んでいる順のカード
    */
-  function collectExistingMedia(container, itemSelector, nameSelectors) {
+  function collectExistingCards(container, itemSelector, nameSelectors) {
     var map = {};
+    var list = [];
 
     container.querySelectorAll(itemSelector).forEach(function (item) {
       var video = item.querySelector('video');
       var img = item.querySelector('img');
-      if (!video && !img) return;
+      var link = item.querySelector('a');
 
       var entry = {
+        el: item,
         video: video ? video.getAttribute('src') : '',
         img: img ? img.getAttribute('src') : '',
+        rank: firstTextOf(item.querySelector('.rank')),
+        symbol: toText(item.querySelector('.symbol') && item.querySelector('.symbol').textContent),
+        heading: toText(item.querySelector('h3') && item.querySelector('h3').textContent),
+        description: toText(item.querySelector('.card-back p, .menu-body p') &&
+          item.querySelector('.card-back p, .menu-body p').textContent),
+        socialUrl: link ? link.getAttribute('href') : '',
+        socialLabel: link ? toText(link.textContent) : '',
+        names: [],
       };
 
       // 表面の名前・裏面の見出しなど、複数の表記で引けるようにしておく
       nameSelectors.forEach(function (selector) {
         item.querySelectorAll(selector).forEach(function (el) {
           var key = nameKey(el.textContent);
-          if (key && !map[key]) map[key] = entry;
+          if (!key) return;
+          if (entry.names.indexOf(key) === -1) entry.names.push(key);
+          if (!map[key]) map[key] = entry;
         });
       });
+
+      list.push(entry);
     });
 
-    return map;
+    return { map: map, list: list };
   }
 
   function findExisting(map, name) {
@@ -228,9 +262,17 @@
     return null;
   }
 
-  function buildCastCard(cast, index, existingMedia) {
-    var rank = cast.cardRank || DEFAULT_RANKS[index % DEFAULT_RANKS.length];
-    var symbol = cast.cardSymbol || DEFAULT_SYMBOLS[index % DEFAULT_SYMBOLS.length];
+  /**
+   * @param {Object} cast microCMSのキャスト
+   * @param {number} index 既定の数字・記号を選ぶための連番
+   * @param {Object|null} existing 名前が一致した既存カード（あれば）
+   */
+  function buildCastCard(cast, index, existing) {
+    // microCMSが空欄なら、既存カードの数字・記号をそのまま引き継ぐ（デザイン維持）
+    var rank = cast.cardRank || (existing && existing.rank) ||
+      DEFAULT_RANKS[index % DEFAULT_RANKS.length];
+    var symbol = cast.cardSymbol || (existing && existing.symbol) ||
+      DEFAULT_SYMBOLS[index % DEFAULT_SYMBOLS.length];
 
     var article = document.createElement('article');
     article.className = 'cast-item';
@@ -272,24 +314,27 @@
     var back = document.createElement('div');
     back.className = 'card-face card-back';
 
-    var media = buildCastMedia(cast, findExisting(existingMedia, cast.name));
+    var media = buildCastMedia(cast, existing);
     if (media) back.appendChild(media);
 
+    // 裏面の見出しは既存表記（例: RAIKA → ライカ）を優先して残す
     var heading = document.createElement('h3');
-    heading.textContent = cast.name;
+    heading.textContent = (existing && existing.heading) || cast.name;
     back.appendChild(heading);
 
     var desc = document.createElement('p');
-    desc.textContent = cast.description;
+    desc.textContent = cast.description || (existing && existing.description) || '';
     back.appendChild(desc);
 
-    if (cast.socialUrl) {
+    var socialUrl = cast.socialUrl || (existing && existing.socialUrl) || '';
+    if (socialUrl) {
       var link = document.createElement('a');
       link.className = 'insta';
-      link.setAttribute('href', cast.socialUrl);
+      link.setAttribute('href', socialUrl);
       link.setAttribute('target', '_blank');
       link.setAttribute('rel', 'noopener noreferrer');
-      link.textContent = cast.socialLabel || guessSocialLabel(cast.socialUrl);
+      link.textContent = cast.socialLabel || (existing && existing.socialLabel) ||
+        guessSocialLabel(socialUrl);
       back.appendChild(link);
     }
 
@@ -307,13 +352,76 @@
     return article;
   }
 
+  /* ------------------------------------------------------------------ *
+   * 部分更新（マージ）の共通処理
+   *
+   * 「microCMSにあるものだけ差し替え、無いものは静的HTMLのまま残す」方式。
+   * microCMSに1件しか登録していなくても、他のカードが消えないようにする。
+   *
+   *   ・名前が一致  → microCMSの内容で置き換える（空欄は既存内容を引き継ぐ）
+   *   ・CMSに無い   → 静的HTMLのまま残す
+   *   ・CMSにだけ有 → 新規カードとして末尾に追加（sort_order順）
+   *   ・is_visible=false → 名前が一致する静的カードも非表示にする
+   * ------------------------------------------------------------------ */
+
+  /**
+   * @param {Element} grid 対象のグリッド
+   * @param {Array} items microCMSの項目（sort_order順・非表示分も含む）
+   * @param {string} itemSelector カード1枚のセレクタ
+   * @param {string[]} nameSelectors 名前が書かれている要素のセレクタ
+   * @param {Function} build (item, index, existing) => Element
+   */
+  function mergeGrid(grid, items, itemSelector, nameSelectors, build) {
+    var existing = collectExistingCards(grid, itemSelector, nameSelectors);
+    var used = {};
+    var appended = 0;
+
+    items.forEach(function (item, index) {
+      var match = findExisting(existing.map, item.name);
+
+      if (match) {
+        // 同じ静的カードに2件以上が一致した場合、2件目以降は新規扱いにする
+        if (used[match.names[0]]) {
+          match = null;
+        } else {
+          match.names.forEach(function (key) {
+            used[key] = true;
+          });
+        }
+      }
+
+      if (match) {
+        if (!item.visible) {
+          // 非表示指定 → 一致する静的カードを取り除く
+          if (match.el.parentNode) match.el.parentNode.removeChild(match.el);
+          return;
+        }
+        // 位置はそのままに、中身だけ差し替える（並び順とデザインを維持）
+        var replacement = build(item, index, match);
+        if (match.el.parentNode) {
+          match.el.parentNode.replaceChild(replacement, match.el);
+        }
+        return;
+      }
+
+      // microCMSにだけ存在する新規カード（非表示指定なら何もしない）
+      if (!item.visible) return;
+      grid.appendChild(build(item, existing.list.length + appended, null));
+      appended += 1;
+    });
+  }
+
+  function mergeCastGrid(grid, casts) {
+    mergeGrid(grid, casts, '.cast-item', ['.title', '.card-back h3'], buildCastCard);
+  }
+
+  /** Special Guest は従来どおり「microCMSの内容で全置き換え」 */
   function renderCastGrid(grid, casts) {
-    // 差し替える前に、既存カードの画像・動画を退避しておく
-    var existingMedia = collectExistingMedia(grid, '.cast-item', ['.title', '.card-back h3']);
+    var existing = collectExistingCards(grid, '.cast-item', ['.title', '.card-back h3']);
 
     clearChildren(grid);
     casts.forEach(function (cast, index) {
-      grid.appendChild(buildCastCard(cast, index, existingMedia));
+      grid.appendChild(buildCastCard(cast, index, findExisting(existing.map, cast.name)));
     });
   }
 
@@ -338,11 +446,11 @@
     body.className = 'menu-body';
 
     var heading = document.createElement('h3');
-    heading.textContent = food.name;
+    heading.textContent = (existing && existing.heading) || food.name;
     body.appendChild(heading);
 
     var desc = document.createElement('p');
-    desc.textContent = food.description;
+    desc.textContent = food.description || (existing && existing.description) || '';
     body.appendChild(desc);
 
     article.appendChild(thumb);
@@ -351,13 +459,9 @@
     return article;
   }
 
-  function renderFoodGrid(grid, foods) {
-    // 差し替える前に、既存カードの写真を退避しておく
-    var existingMedia = collectExistingMedia(grid, '.menu-card', ['.menu-body h3']);
-
-    clearChildren(grid);
-    foods.forEach(function (food) {
-      grid.appendChild(buildFoodCard(food, findExisting(existingMedia, food.name)));
+  function mergeFoodGrid(grid, foods) {
+    mergeGrid(grid, foods, '.menu-card', ['.menu-body h3'], function (food, index, existing) {
+      return buildFoodCard(food, existing);
     });
   }
 
@@ -382,10 +486,12 @@
   }
 
   function apply(records) {
+    // is_visible=false もここでは捨てない。
+    // 「名前が一致する静的カードを非表示にする」ためにマージ処理まで渡す。
     var items = records
       .map(normalize)
       .filter(function (item) {
-        return item.visible && item.name;
+        return item.name;
       });
 
     var casts = sortByOrder(
@@ -393,9 +499,10 @@
         return item.type === 'cast';
       })
     );
+    // Special Guest は全置き換え方式のため、非表示分はここで除外する
     var guests = sortByOrder(
       items.filter(function (item) {
-        return item.type === 'special_guest';
+        return item.type === 'special_guest' && item.visible;
       })
     );
     var foods = sortByOrder(
@@ -404,11 +511,11 @@
       })
     );
 
-    /* ---- 通常キャスト（index.html） ---- */
+    /* ---- 通常キャスト（index.html）: 部分更新 ---- */
     var castGrid = document.getElementById('castGrid');
     if (castGrid) {
       if (casts.length > 0) {
-        renderCastGrid(castGrid, casts);
+        mergeCastGrid(castGrid, casts);
       } else {
         console.warn('[cms-content] 通常キャストのデータが0件のため、既存の内容を表示します。');
       }
@@ -430,11 +537,11 @@
       }
     }
 
-    /* ---- 料理（service.html） ---- */
+    /* ---- 料理（service.html）: 部分更新 ---- */
     var foodGrid = document.getElementById('foodGrid');
     if (foodGrid) {
       if (foods.length > 0) {
-        renderFoodGrid(foodGrid, foods);
+        mergeFoodGrid(foodGrid, foods);
       } else {
         console.warn('[cms-content] 料理のデータが0件のため、既存の内容を表示します。');
       }

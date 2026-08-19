@@ -16,6 +16,12 @@
 const DEFAULT_SERVICE_DOMAIN = 'l9pawk28o1';
 const DEFAULT_ENDPOINT = 'baynyx';
 
+// microCMSの1回あたり取得件数（APIの上限は100）
+const PAGE_LIMIT = 100;
+
+// 暴走防止の上限。これを超える件数は取得しない。
+const MAX_CONTENTS = 1000;
+
 // microCMSへのリクエスト回数を抑えるためのキャッシュ設定
 const CACHE_CONTROL = 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400';
 
@@ -43,17 +49,19 @@ export async function onRequestGet(context) {
     return json(503, { error: 'not_configured' });
   }
 
-  const url =
+  const base =
     'https://' +
     encodeURIComponent(serviceDomain) +
     '.microcms.io/api/v1/' +
-    encodeURIComponent(endpoint) +
-    '?limit=100';
+    encodeURIComponent(endpoint);
+
+  const headers = { 'X-MICROCMS-API-KEY': apiKey };
+
+  const fetchPage = (offset) =>
+    fetch(base + '?limit=' + PAGE_LIMIT + '&offset=' + offset, { headers });
 
   try {
-    const response = await fetch(url, {
-      headers: { 'X-MICROCMS-API-KEY': apiKey },
-    });
+    const response = await fetchPage(0);
 
     if (!response.ok) {
       console.warn('microCMS API error: ' + response.status);
@@ -61,6 +69,29 @@ export async function onRequestGet(context) {
     }
 
     const data = await response.json();
+
+    // 100件を超える場合だけ、続きを offset で取りに行く。
+    // 追加取得に失敗しても、取得できたところまでを返してサイトを壊さない。
+    if (Array.isArray(data.contents) && Number(data.totalCount) > data.contents.length) {
+      const total = Math.min(Number(data.totalCount), MAX_CONTENTS);
+
+      try {
+        while (data.contents.length < total) {
+          const next = await fetchPage(data.contents.length);
+          if (!next.ok) break;
+
+          const page = await next.json();
+          if (!page || !Array.isArray(page.contents) || page.contents.length === 0) break;
+
+          data.contents = data.contents.concat(page.contents);
+        }
+      } catch (error) {
+        console.warn(
+          'microCMS pagination stopped early:',
+          error && error.message ? error.message : error
+        );
+      }
+    }
 
     return json(200, data, CACHE_CONTROL);
   } catch (error) {

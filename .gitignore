@@ -1,5 +1,12 @@
 # Cloudflare Pages のローカル用環境変数（APIキーを含むためコミット禁止）
 .dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# 環境変数ファイル（APIキーを含むためコミット禁止）
+.env
+.env.*
+!.env.example
 
 # macOS
 .DS_Store
