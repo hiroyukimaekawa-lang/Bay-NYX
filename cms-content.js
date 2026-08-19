@@ -140,7 +140,8 @@
   /* ------------------------------------------------------------------ *
    * HTMLに差し込まれている既存の画像・動画を引き継ぐ仕組み
    *
-   * 動画(mp4)はmicroCMSでは扱えないため、HTMLに書かれた動画をそのまま使う。
+   * microCMSに video_url も photo も無いキャストは、HTMLに書かれた
+   * 動画・画像（CloudinaryのURL）をそのまま使う。
    * microCMSの「名前」とHTMLのカード名が一致したものを引き継ぐ。
    * ------------------------------------------------------------------ */
 
@@ -196,6 +197,7 @@
     video.setAttribute('muted', '');
     video.setAttribute('loop', '');
     video.setAttribute('playsinline', '');
+    video.setAttribute('preload', 'metadata');
     // 属性だけではミュートにならないブラウザがあるためプロパティも立てる
     video.muted = true;
     return video;
@@ -211,15 +213,17 @@
 
   /**
    * キャストカードのメディアの優先順位:
-   *   1. HTMLに差し込まれている動画（名前が一致するもの）… 動画は常にこちらが優先
-   *   2. microCMSの video_url（外部に置いた動画を使う場合の保険）
-   *   3. microCMSの photo（写真）
+   *   1. microCMSの video_url（Cloudinaryなどに置いた動画のURL）… 動画は常にこちらが優先
+   *   2. microCMSの photo（写真）
+   *   3. HTMLに書かれている動画（名前が一致するもの／CloudinaryのURL）
    *   4. HTMLに差し込まれている既存の画像（名前が一致するもの）
+   *
+   * video_url を空にすると 2 の写真に戻り、写真も無ければ 3 のHTML側に戻ります。
    */
   function buildCastMedia(cast, existing) {
-    if (existing && existing.video) return buildVideo(existing.video);
     if (cast.videoUrl) return buildVideo(cast.videoUrl);
     if (cast.photoUrl) return buildImage(cast.photoUrl, cast.name);
+    if (existing && existing.video) return buildVideo(existing.video);
     if (existing && existing.img) return buildImage(existing.img, cast.name);
     return null;
   }
