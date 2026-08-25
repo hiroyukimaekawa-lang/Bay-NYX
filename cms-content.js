@@ -1,42 +1,36 @@
 /**
- * Bay NYX - microCMS 表示スクリプト
+ * Bay NYX - microCMS 動的コンテンツ描画スクリプト (ハイブリッド方式)
  *
- * 通常キャスト / 期間限定キャスト / 料理 を microCMS から取得して描画します。
+ * 料理 (food-menu) および スタッフ (staff Golden Cards) を microCMS から取得し描画します。
  *
  * 設計方針:
- *  - APIキーはこのファイルに書きません。サーバー側（/api/baynyx）が持ちます。
- *  - 取得に失敗した場合・0件の場合は、HTMLに書かれている既存の内容をそのまま残します
- *    （画面にエラーは出さず、Consoleにwarningを出すだけ）。
- *  - HTMLの組み立ては createElement / textContent / setAttribute で行い、
- *    innerHTML への文字列挿入はしません（XSS対策）。
+ *  - APIキーはクライアント側に保持せず、Netlify Function (/food-menu, /staff) 経由で取得。
+ *  - 取得失敗・環境変数未設定時は、静的HTML要素 (フォールバック) をそのまま残します。
+ *  - ハイブリッド移行: microCMSに存在するデータ (key一致) のみ置換・表示更新、新規追加項目は sortOrder 順に挿入。
+ *  - textContent による XSS 対策および safeUrl による URL スキーム (http/https) 検証を実施。
  */
 
 (function () {
   'use strict';
 
-  var API_URL = '/api/baynyx';
+  var FOOD_API_URL = '/.netlify/functions/food-menu';
+  var STAFF_API_URL = '/.netlify/functions/staff';
 
-  // card_rank / card_symbol が未設定のときに使う既定値
   var DEFAULT_RANKS = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
   var DEFAULT_SYMBOLS = ['♠', '♥', '♦', '♣'];
 
   /* ------------------------------------------------------------------ *
-   * 小さなユーティリティ
+   * ユーティリティ
    * ------------------------------------------------------------------ */
 
-  /**
-   * microCMSのセレクトフィールドは配列（例: ["cast"]）で返るため、
-   * 文字列・配列のどちらでも受け取れるようにする。
-   */
   function toText(value) {
     if (value === null || value === undefined) return '';
     if (Array.isArray(value)) return value.length ? toText(value[0]) : '';
     return String(value).trim();
   }
 
-  /** http / https のURLだけを許可する。それ以外は空文字を返す。 */
+  /** http: または https: の安全なURLのみ許可 */
   function safeUrl(value) {
-    // 画像・動画フィールドは { url: '...' } のオブジェクトで返ることがある
     var raw = value && typeof value === 'object' && !Array.isArray(value) ? value.url : value;
     raw = toText(raw);
     if (!raw) return '';
@@ -47,16 +41,31 @@
         return parsed.href;
       }
     } catch (e) {
-      // 解釈できないURLは使わない
+      // 無効なURL
     }
     return '';
   }
 
-  /**
-   * SNS表示名(social_label)が未設定のときに、URLからボタンの文字を推測する。
-   * 例: tiktok.com のURLなら「TikTok」と表示する。
-   */
-  function guessSocialLabel(url) {
+  /** カードスートの記号変換 (heart -> ♥, diamond -> ♦, spade -> ♠, club -> ♣) */
+  function normalizeSuit(suit) {
+    var s = toText(suit).toLowerCase();
+    if (s === 'heart' || s === 'hearts') return '♥';
+    if (s === 'diamond' || s === 'diamonds') return '♦';
+    if (s === 'spade' || s === 'spades') return '♠';
+    if (s === 'club' || s === 'clubs') return '♣';
+    if (suit) return suit; // 既に記号が入っている場合
+    return '♠';
+  }
+
+  /** SNS種別・URLからボタン表記を確定 */
+  function getSocialLabel(type, url) {
+    var t = toText(type).toLowerCase();
+    if (t === 'instagram') return 'Instagram';
+    if (t === 'tiktok') return 'TikTok';
+    if (t === 'x' || t === 'twitter') return 'X';
+    if (t === 'none') return '';
+
+    if (!url) return 'Instagram';
     var host = '';
     try {
       host = new URL(url).hostname.toLowerCase();
@@ -65,218 +74,187 @@
     }
     if (host.indexOf('tiktok.') !== -1) return 'TikTok';
     if (host.indexOf('x.com') !== -1 || host.indexOf('twitter.') !== -1) return 'X';
-    if (host.indexOf('youtube.') !== -1 || host.indexOf('youtu.be') !== -1) return 'YouTube';
-    if (host.indexOf('line.') !== -1) return 'LINE';
     return 'Instagram';
   }
 
-  /** sort_order 昇順。未設定は最後に回す（同順位は登録順を維持）。 */
-  function sortByOrder(items) {
-    return items
-      .map(function (item, index) {
-        return { item: item, index: index };
-      })
-      .sort(function (a, b) {
-        var ao = a.item.sortOrder;
-        var bo = b.item.sortOrder;
-        if (ao !== bo) return ao - bo;
-        return a.index - b.index;
-      })
-      .map(function (entry) {
-        return entry.item;
-      });
-  }
-
-  /**
-   * .fade のフェードイン表示を確定させる。
-   *
-   * ページ側のIntersectionObserverは「画面内に入ったら .show を付ける」動きだが、
-   * 非表示(hidden / display:none)の要素は画面内と判定されないため、
-   * あとから表示する要素にはここで .show を付ける。
-   * （opacity 0 → 1 のtransitionは残るのでフェードインの見た目は変わらない）
-   */
-  function revealFade(root) {
-    if (root.classList && root.classList.contains('fade')) {
-      root.classList.add('show');
-    }
-    root.querySelectorAll('.fade').forEach(function (el) {
-      el.classList.add('show');
+  /** 第一ソート: sortOrder (昇順), 第二ソート: key (辞書順) */
+  function sortItems(items) {
+    return items.slice().sort(function (a, b) {
+      var ao = typeof a.sortOrder === 'number' && isFinite(a.sortOrder) ? a.sortOrder : Infinity;
+      var bo = typeof b.sortOrder === 'number' && isFinite(b.sortOrder) ? b.sortOrder : Infinity;
+      if (ao !== bo) return ao - bo;
+      var ak = a.key || '';
+      var bk = b.key || '';
+      return ak.localeCompare(bk);
     });
   }
 
-  /** 子要素をすべて取り除く */
-  function clearChildren(el) {
-    while (el.firstChild) {
-      el.removeChild(el.firstChild);
+  function fetchJSON(url) {
+    return fetch(url, { headers: { Accept: 'application/json' } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data || !Array.isArray(data.contents)) {
+          throw new Error('Invalid response format');
+        }
+        return data.contents;
+      });
+  }
+
+  /** コンテナ内の要素を sortOrder に従って適切な位置へ並び替え・挿入 */
+  function insertBySortOrder(container, newElement, newSortOrder, newKey) {
+    var children = Array.prototype.slice.call(container.children);
+    var targetNode = null;
+
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      var childOrder = Number(child.getAttribute('data-sort-order')) || Infinity;
+      var childKey = child.getAttribute('data-cms-key') || '';
+
+      if (
+        newSortOrder < childOrder ||
+        (newSortOrder === childOrder && newKey.localeCompare(childKey) < 0)
+      ) {
+        targetNode = child;
+        break;
+      }
+    }
+
+    if (targetNode) {
+      container.insertBefore(newElement, targetNode);
+    } else {
+      container.appendChild(newElement);
     }
   }
 
   /* ------------------------------------------------------------------ *
-   * microCMSのレコードを、画面で使いやすい形に整える
+   * 料理メニュー (food-menu) ハイブリッド描画
    * ------------------------------------------------------------------ */
 
-  function normalize(record) {
-    // content_type が未設定の既存データは special_guest として扱う（後方互換）
-    var type = toText(record.content_type).toLowerCase() || 'special_guest';
-
-    // sort_order は null / undefined / 空文字 / 数値にできない値を「未設定」とみなし、
-    // Number.POSITIVE_INFINITY にして必ず最後尾へ回す（0 や NaN と混同しない）
-    var rawOrder = record.sort_order;
-    var order;
-    if (rawOrder === null || rawOrder === undefined || toText(rawOrder) === '') {
-      order = Number.POSITIVE_INFINITY;
-    } else {
-      order = Number(rawOrder);
-      if (!isFinite(order)) order = Number.POSITIVE_INFINITY;
-    }
+  function normalizeFood(record) {
+    var rawOrder = record.sortOrder !== undefined ? record.sortOrder : record.sort_order;
+    var order = Number(rawOrder);
+    if (!isFinite(order)) order = Infinity;
 
     return {
-      type: type,
+      key: toText(record.key),
       name: toText(record.name),
       description: toText(record.description),
-      photoUrl: safeUrl(record.photo),
-      videoUrl: safeUrl(record.video_url),
-      socialUrl: safeUrl(record.instagram_url),
-      socialLabel: toText(record.social_label),
-      cardRank: toText(record.card_rank),
-      cardSymbol: toText(record.card_symbol),
+      photoUrl: safeUrl(record.image || record.photo),
       sortOrder: order,
-      // is_visible 未設定（undefined / null）は「表示する」
-      visible: record.is_visible === false ? false : true,
+      isVisible: record.isVisible !== undefined ? Boolean(record.isVisible) : record.is_visible !== false,
     };
   }
 
-  /* ------------------------------------------------------------------ *
-   * HTMLに差し込まれている既存の画像・動画を引き継ぐ仕組み
-   *
-   * microCMSに video_url も photo も無いキャストは、HTMLに書かれた
-   * 動画・画像（CloudinaryのURL）をそのまま使う。
-   * microCMSの「名前」とHTMLのカード名が一致したものを引き継ぐ。
-   * ------------------------------------------------------------------ */
+  function createFoodCard(food) {
+    var article = document.createElement('article');
+    article.className = 'menu-card';
+    if (food.key) article.setAttribute('data-cms-key', food.key);
+    article.setAttribute('data-sort-order', isFinite(food.sortOrder) ? food.sortOrder : 999);
 
-  /** 比較用に名前をそろえる（前後の空白を除去し、大文字小文字を無視する） */
-  function nameKey(value) {
-    return toText(value).toLowerCase();
+    var thumb = document.createElement('div');
+    thumb.className = 'menu-thumb';
+    if (food.photoUrl) {
+      var img = document.createElement('img');
+      img.setAttribute('src', food.photoUrl);
+      img.setAttribute('alt', food.name);
+      img.setAttribute('loading', 'lazy');
+      thumb.appendChild(img);
+    }
+    article.appendChild(thumb);
+
+    var body = document.createElement('div');
+    body.className = 'menu-body';
+
+    var h3 = document.createElement('h3');
+    h3.textContent = food.name;
+    body.appendChild(h3);
+
+    var p = document.createElement('p');
+    p.textContent = food.description;
+    body.appendChild(p);
+
+    article.appendChild(body);
+    return article;
   }
 
-  /** 「A<br>♠」のような要素から先頭のテキスト（A）だけを取り出す */
-  function firstTextOf(el) {
-    if (!el) return '';
-    var node = el.firstChild;
-    return node && node.nodeType === 3 ? toText(node.nodeValue) : toText(el.textContent);
-  }
+  function applyFoodMenu(records) {
+    var grid = document.getElementById('foodGrid');
+    if (!grid) return;
 
-  /**
-   * 差し替え前のHTMLを走査して、静的カードの一覧と「名前 → 既存カード」の対応表を作る。
-   *
-   * 画像・動画だけでなく、カードの数字・記号・見出し・紹介文・SNSリンクも退避する。
-   * microCMS側の項目が空のときに、既存デザインをそのまま引き継ぐために使う。
-   *
-   * @param {Element} container 静的カードが入っている要素
-   * @param {string}  itemSelector カード1枚のセレクタ
-   * @param {string[]} nameSelectors 名前が書かれている要素のセレクタ（複数可）
-   * @returns {{map: Object, list: Array}} map=名前→カード / list=HTMLに並んでいる順のカード
-   */
-  function collectExistingCards(container, itemSelector, nameSelectors) {
-    var map = {};
-    var list = [];
+    var foods = sortItems(records.map(normalizeFood).filter(function (f) { return f.key || f.name; }));
+    if (foods.length === 0) return;
 
-    container.querySelectorAll(itemSelector).forEach(function (item) {
-      var video = item.querySelector('video');
-      var img = item.querySelector('img');
-      var link = item.querySelector('a');
+    foods.forEach(function (food) {
+      var existing = food.key ? grid.querySelector('[data-cms-key="' + food.key + '"]') : null;
 
-      var entry = {
-        el: item,
-        video: video ? video.getAttribute('src') : '',
-        img: img ? img.getAttribute('src') : '',
-        rank: firstTextOf(item.querySelector('.rank')),
-        symbol: toText(item.querySelector('.symbol') && item.querySelector('.symbol').textContent),
-        heading: toText(item.querySelector('h3') && item.querySelector('h3').textContent),
-        description: toText(item.querySelector('.card-back p, .menu-body p') &&
-          item.querySelector('.card-back p, .menu-body p').textContent),
-        socialUrl: link ? link.getAttribute('href') : '',
-        socialLabel: link ? toText(link.textContent) : '',
-        names: [],
-      };
+      // 非表示の場合
+      if (!food.isVisible) {
+        if (existing) existing.style.display = 'none';
+        return;
+      }
 
-      // 表面の名前・裏面の見出しなど、複数の表記で引けるようにしておく
-      nameSelectors.forEach(function (selector) {
-        item.querySelectorAll(selector).forEach(function (el) {
-          var key = nameKey(el.textContent);
-          if (!key) return;
-          if (entry.names.indexOf(key) === -1) entry.names.push(key);
-          if (!map[key]) map[key] = entry;
-        });
-      });
-
-      list.push(entry);
+      if (existing) {
+        // 既存カードの置換・更新
+        existing.style.display = '';
+        existing.setAttribute('data-sort-order', food.sortOrder);
+        var img = existing.querySelector('.menu-thumb img');
+        if (food.photoUrl) {
+          if (img) {
+            img.setAttribute('src', food.photoUrl);
+            img.setAttribute('alt', food.name);
+          } else {
+            var newImg = document.createElement('img');
+            newImg.setAttribute('src', food.photoUrl);
+            newImg.setAttribute('alt', food.name);
+            newImg.setAttribute('loading', 'lazy');
+            var thumb = existing.querySelector('.menu-thumb');
+            if (thumb) thumb.appendChild(newImg);
+          }
+        }
+        var h3 = existing.querySelector('.menu-body h3');
+        if (h3 && food.name) h3.textContent = food.name;
+        var p = existing.querySelector('.menu-body p');
+        if (p && food.description !== undefined) p.textContent = food.description;
+      } else {
+        // 新規カードの動的挿入
+        var newCard = createFoodCard(food);
+        insertBySortOrder(grid, newCard, food.sortOrder, food.key);
+      }
     });
-
-    return { map: map, list: list };
-  }
-
-  function findExisting(map, name) {
-    return map[nameKey(name)] || null;
   }
 
   /* ------------------------------------------------------------------ *
-   * キャストカードの組み立て
+   * スタッフ Golden Cards (staff) ハイブリッド描画
    * ------------------------------------------------------------------ */
 
-  function buildVideo(src) {
-    var video = document.createElement('video');
-    video.setAttribute('src', src);
-    video.setAttribute('autoplay', '');
-    video.setAttribute('muted', '');
-    video.setAttribute('loop', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('preload', 'metadata');
-    // 属性だけではミュートにならないブラウザがあるためプロパティも立てる
-    video.muted = true;
-    return video;
+  function normalizeStaff(record, index) {
+    var rawOrder = record.sortOrder !== undefined ? record.sortOrder : record.sort_order;
+    var order = Number(rawOrder);
+    if (!isFinite(order)) order = Infinity;
+
+    return {
+      key: toText(record.key),
+      name: toText(record.name),
+      description: toText(record.description),
+      photoUrl: safeUrl(record.image || record.photo),
+      cardRank: toText(record.cardRank || record.card_rank) || DEFAULT_RANKS[index % DEFAULT_RANKS.length],
+      cardSuit: normalizeSuit(record.cardSuit || record.card_symbol || DEFAULT_SYMBOLS[index % DEFAULT_SYMBOLS.length]),
+      socialType: toText(record.socialType || record.social_label),
+      socialUrl: safeUrl(record.socialUrl || record.instagram_url),
+      sortOrder: order,
+      isVisible: record.isVisible !== undefined ? Boolean(record.isVisible) : record.is_visible !== false,
+    };
   }
 
-  function buildImage(src, alt) {
-    var img = document.createElement('img');
-    img.setAttribute('src', src);
-    img.setAttribute('alt', alt);
-    img.setAttribute('loading', 'lazy');
-    return img;
-  }
-
-  /**
-   * キャストカードのメディアの優先順位:
-   *   1. microCMSの video_url（Cloudinaryなどに置いた動画のURL）… 動画は常にこちらが優先
-   *   2. microCMSの photo（写真）
-   *   3. HTMLに書かれている動画（名前が一致するもの／CloudinaryのURL）
-   *   4. HTMLに差し込まれている既存の画像（名前が一致するもの）
-   *
-   * video_url を空にすると 2 の写真に戻り、写真も無ければ 3 のHTML側に戻ります。
-   */
-  function buildCastMedia(cast, existing) {
-    if (cast.videoUrl) return buildVideo(cast.videoUrl);
-    if (cast.photoUrl) return buildImage(cast.photoUrl, cast.name);
-    if (existing && existing.video) return buildVideo(existing.video);
-    if (existing && existing.img) return buildImage(existing.img, cast.name);
-    return null;
-  }
-
-  /**
-   * @param {Object} cast microCMSのキャスト
-   * @param {number} index 既定の数字・記号を選ぶための連番
-   * @param {Object|null} existing 名前が一致した既存カード（あれば）
-   */
-  function buildCastCard(cast, index, existing) {
-    // microCMSが空欄なら、既存カードの数字・記号をそのまま引き継ぐ（デザイン維持）
-    var rank = cast.cardRank || (existing && existing.rank) ||
-      DEFAULT_RANKS[index % DEFAULT_RANKS.length];
-    var symbol = cast.cardSymbol || (existing && existing.symbol) ||
-      DEFAULT_SYMBOLS[index % DEFAULT_SYMBOLS.length];
-
+  function createStaffCard(staff) {
     var article = document.createElement('article');
     article.className = 'cast-item';
     article.tabIndex = 0;
+    if (staff.key) article.setAttribute('data-cms-key', staff.key);
+    article.setAttribute('data-sort-order', isFinite(staff.sortOrder) ? staff.sortOrder : 999);
 
     var card = document.createElement('div');
     card.className = 'card';
@@ -287,23 +265,23 @@
 
     var rankTop = document.createElement('span');
     rankTop.className = 'rank';
-    rankTop.appendChild(document.createTextNode(rank));
+    rankTop.appendChild(document.createTextNode(staff.cardRank));
     rankTop.appendChild(document.createElement('br'));
-    rankTop.appendChild(document.createTextNode(symbol));
+    rankTop.appendChild(document.createTextNode(staff.cardSuit));
 
     var symbolEl = document.createElement('span');
     symbolEl.className = 'symbol';
-    symbolEl.textContent = symbol;
+    symbolEl.textContent = staff.cardSuit;
 
     var titleEl = document.createElement('span');
     titleEl.className = 'title';
-    titleEl.textContent = cast.name;
+    titleEl.textContent = staff.name;
 
     var rankBottom = document.createElement('span');
     rankBottom.className = 'rank bottom';
-    rankBottom.appendChild(document.createTextNode(rank));
+    rankBottom.appendChild(document.createTextNode(staff.cardRank));
     rankBottom.appendChild(document.createElement('br'));
-    rankBottom.appendChild(document.createTextNode(symbol));
+    rankBottom.appendChild(document.createTextNode(staff.cardSuit));
 
     front.appendChild(rankTop);
     front.appendChild(symbolEl);
@@ -314,27 +292,31 @@
     var back = document.createElement('div');
     back.className = 'card-face card-back';
 
-    var media = buildCastMedia(cast, existing);
-    if (media) back.appendChild(media);
+    if (staff.photoUrl) {
+      var img = document.createElement('img');
+      img.setAttribute('src', staff.photoUrl);
+      img.setAttribute('alt', staff.name);
+      img.setAttribute('loading', 'lazy');
+      back.appendChild(img);
+    }
 
-    // 裏面の見出しは既存表記（例: RAIKA → ライカ）を優先して残す
     var heading = document.createElement('h3');
-    heading.textContent = (existing && existing.heading) || cast.name;
+    heading.textContent = staff.name;
     back.appendChild(heading);
 
-    var desc = document.createElement('p');
-    desc.textContent = cast.description || (existing && existing.description) || '';
-    back.appendChild(desc);
+    if (staff.description) {
+      var desc = document.createElement('p');
+      desc.textContent = staff.description;
+      back.appendChild(desc);
+    }
 
-    var socialUrl = cast.socialUrl || (existing && existing.socialUrl) || '';
-    if (socialUrl) {
+    if (staff.socialUrl) {
       var link = document.createElement('a');
       link.className = 'insta';
-      link.setAttribute('href', socialUrl);
+      link.setAttribute('href', staff.socialUrl);
       link.setAttribute('target', '_blank');
       link.setAttribute('rel', 'noopener noreferrer');
-      link.textContent = cast.socialLabel || (existing && existing.socialLabel) ||
-        guessSocialLabel(socialUrl);
+      link.textContent = getSocialLabel(staff.socialType, staff.socialUrl);
       back.appendChild(link);
     }
 
@@ -342,7 +324,7 @@
     card.appendChild(back);
     article.appendChild(card);
 
-    // スマートフォンなどタッチ端末では、タップでカードを裏返す
+    // タッチ端末用裏えし対応
     article.addEventListener('click', function () {
       if (window.matchMedia('(hover: none)').matches) {
         article.classList.toggle('is-flipped');
@@ -352,212 +334,120 @@
     return article;
   }
 
-  /* ------------------------------------------------------------------ *
-   * 部分更新（マージ）の共通処理
-   *
-   * 「microCMSにあるものだけ差し替え、無いものは静的HTMLのまま残す」方式。
-   * microCMSに1件しか登録していなくても、他のカードが消えないようにする。
-   *
-   *   ・名前が一致  → microCMSの内容で置き換える（空欄は既存内容を引き継ぐ）
-   *   ・CMSに無い   → 静的HTMLのまま残す
-   *   ・CMSにだけ有 → 新規カードとして末尾に追加（sort_order順）
-   *   ・is_visible=false → 名前が一致する静的カードも非表示にする
-   * ------------------------------------------------------------------ */
+  function applyStaffMenu(records) {
+    var grid = document.getElementById('castGrid');
+    if (!grid) return;
 
-  /**
-   * @param {Element} grid 対象のグリッド
-   * @param {Array} items microCMSの項目（sort_order順・非表示分も含む）
-   * @param {string} itemSelector カード1枚のセレクタ
-   * @param {string[]} nameSelectors 名前が書かれている要素のセレクタ
-   * @param {Function} build (item, index, existing) => Element
-   */
-  function mergeGrid(grid, items, itemSelector, nameSelectors, build) {
-    var existing = collectExistingCards(grid, itemSelector, nameSelectors);
-    var used = {};
-    var appended = 0;
+    var staffList = sortItems(records.map(normalizeStaff).filter(function (s) { return s.key || s.name; }));
+    if (staffList.length === 0) return;
 
-    items.forEach(function (item, index) {
-      var match = findExisting(existing.map, item.name);
+    staffList.forEach(function (staff) {
+      var existing = staff.key ? grid.querySelector('[data-cms-key="' + staff.key + '"]') : null;
 
-      if (match) {
-        // 同じ静的カードに2件以上が一致した場合、2件目以降は新規扱いにする
-        if (used[match.names[0]]) {
-          match = null;
-        } else {
-          match.names.forEach(function (key) {
-            used[key] = true;
-          });
-        }
-      }
-
-      if (match) {
-        if (!item.visible) {
-          // 非表示指定 → 一致する静的カードを取り除く
-          if (match.el.parentNode) match.el.parentNode.removeChild(match.el);
-          return;
-        }
-        // 位置はそのままに、中身だけ差し替える（並び順とデザインを維持）
-        var replacement = build(item, index, match);
-        if (match.el.parentNode) {
-          match.el.parentNode.replaceChild(replacement, match.el);
-        }
+      // 非表示の場合
+      if (!staff.isVisible) {
+        if (existing) existing.style.display = 'none';
         return;
       }
 
-      // microCMSにだけ存在する新規カード（非表示指定なら何もしない）
-      if (!item.visible) return;
-      grid.appendChild(build(item, existing.list.length + appended, null));
-      appended += 1;
-    });
-  }
+      if (existing) {
+        // 既存カードの更新
+        existing.style.display = '';
+        existing.setAttribute('data-sort-order', staff.sortOrder);
 
-  function mergeCastGrid(grid, casts) {
-    mergeGrid(grid, casts, '.cast-item', ['.title', '.card-back h3'], buildCastCard);
-  }
+        // 表面ランク・スート・タイトルの更新
+        var rankTop = existing.querySelector('.card-front .rank:not(.bottom)');
+        if (rankTop) {
+          while (rankTop.firstChild) rankTop.removeChild(rankTop.firstChild);
+          rankTop.appendChild(document.createTextNode(staff.cardRank));
+          rankTop.appendChild(document.createElement('br'));
+          rankTop.appendChild(document.createTextNode(staff.cardSuit));
+        }
 
-  /** Special Guest は従来どおり「microCMSの内容で全置き換え」 */
-  function renderCastGrid(grid, casts) {
-    var existing = collectExistingCards(grid, '.cast-item', ['.title', '.card-back h3']);
+        var symbolEl = existing.querySelector('.card-front .symbol');
+        if (symbolEl) symbolEl.textContent = staff.cardSuit;
 
-    clearChildren(grid);
-    casts.forEach(function (cast, index) {
-      grid.appendChild(buildCastCard(cast, index, findExisting(existing.map, cast.name)));
+        var titleEl = existing.querySelector('.card-front .title');
+        if (titleEl && staff.name) titleEl.textContent = staff.name;
+
+        var rankBottom = existing.querySelector('.card-front .rank.bottom');
+        if (rankBottom) {
+          while (rankBottom.firstChild) rankBottom.removeChild(rankBottom.firstChild);
+          rankBottom.appendChild(document.createTextNode(staff.cardRank));
+          rankBottom.appendChild(document.createElement('br'));
+          rankBottom.appendChild(document.createTextNode(staff.cardSuit));
+        }
+
+        // 裏面写真・見出し・説明・SNSの更新
+        var back = existing.querySelector('.card-back');
+        if (back) {
+          if (staff.photoUrl) {
+            var existingImg = back.querySelector('img');
+            var existingVideo = back.querySelector('video');
+            if (existingImg) {
+              existingImg.setAttribute('src', staff.photoUrl);
+              existingImg.setAttribute('alt', staff.name);
+            } else if (!existingVideo) {
+              var newImg = document.createElement('img');
+              newImg.setAttribute('src', staff.photoUrl);
+              newImg.setAttribute('alt', staff.name);
+              newImg.setAttribute('loading', 'lazy');
+              back.insertBefore(newImg, back.firstChild);
+            }
+          }
+
+          var h3 = back.querySelector('h3');
+          if (h3 && staff.name) h3.textContent = staff.name;
+
+          var p = back.querySelector('p');
+          if (p && staff.description) p.textContent = staff.description;
+
+          if (staff.socialUrl) {
+            var a = back.querySelector('a');
+            if (a) {
+              a.setAttribute('href', staff.socialUrl);
+              a.textContent = getSocialLabel(staff.socialType, staff.socialUrl);
+            } else {
+              var newA = document.createElement('a');
+              newA.className = 'insta';
+              newA.setAttribute('href', staff.socialUrl);
+              newA.setAttribute('target', '_blank');
+              newA.setAttribute('rel', 'noopener noreferrer');
+              newA.textContent = getSocialLabel(staff.socialType, staff.socialUrl);
+              back.appendChild(newA);
+            }
+          }
+        }
+      } else {
+        // 新規カードの動的挿入
+        var newCard = createStaffCard(staff);
+        insertBySortOrder(grid, newCard, staff.sortOrder, staff.key);
+      }
     });
   }
 
   /* ------------------------------------------------------------------ *
-   * 料理カードの組み立て
+   * 初期化
    * ------------------------------------------------------------------ */
-
-  function buildFoodCard(food, existing) {
-    var article = document.createElement('article');
-    article.className = 'menu-card';
-
-    var thumb = document.createElement('div');
-    thumb.className = 'menu-thumb';
-
-    // microCMSに写真が無ければ、HTMLに差し込まれている既存の写真を引き継ぐ
-    var src = food.photoUrl || (existing && existing.img) || '';
-    if (src) {
-      thumb.appendChild(buildImage(src, food.name));
-    }
-
-    var body = document.createElement('div');
-    body.className = 'menu-body';
-
-    var heading = document.createElement('h3');
-    heading.textContent = (existing && existing.heading) || food.name;
-    body.appendChild(heading);
-
-    var desc = document.createElement('p');
-    desc.textContent = food.description || (existing && existing.description) || '';
-    body.appendChild(desc);
-
-    article.appendChild(thumb);
-    article.appendChild(body);
-
-    return article;
-  }
-
-  function mergeFoodGrid(grid, foods) {
-    mergeGrid(grid, foods, '.menu-card', ['.menu-body h3'], function (food, index, existing) {
-      return buildFoodCard(food, existing);
-    });
-  }
-
-  /* ------------------------------------------------------------------ *
-   * 取得と振り分け
-   * ------------------------------------------------------------------ */
-
-  function fetchContents() {
-    return fetch(API_URL, { headers: { Accept: 'application/json' } })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error('API responded with ' + response.status);
-        }
-        return response.json();
-      })
-      .then(function (data) {
-        if (!data || !Array.isArray(data.contents)) {
-          throw new Error('Unexpected response format');
-        }
-        return data.contents;
-      });
-  }
-
-  function apply(records) {
-    // is_visible=false もここでは捨てない。
-    // 「名前が一致する静的カードを非表示にする」ためにマージ処理まで渡す。
-    var items = records
-      .map(normalize)
-      .filter(function (item) {
-        return item.name;
-      });
-
-    var casts = sortByOrder(
-      items.filter(function (item) {
-        return item.type === 'cast';
-      })
-    );
-    // Special Guest は全置き換え方式のため、非表示分はここで除外する
-    var guests = sortByOrder(
-      items.filter(function (item) {
-        return item.type === 'special_guest' && item.visible;
-      })
-    );
-    var foods = sortByOrder(
-      items.filter(function (item) {
-        return item.type === 'food';
-      })
-    );
-
-    /* ---- 通常キャスト（index.html）: 部分更新 ---- */
-    var castGrid = document.getElementById('castGrid');
-    if (castGrid) {
-      if (casts.length > 0) {
-        mergeCastGrid(castGrid, casts);
-      } else {
-        console.warn('[cms-content] 通常キャストのデータが0件のため、既存の内容を表示します。');
-      }
-    }
-
-    /* ---- 期間限定キャスト（index.html） ---- */
-    var guestGrid = document.getElementById('specialGuestGrid');
-    var guestSection = document.getElementById('specialGuestSection');
-    if (guestGrid) {
-      if (guests.length > 0) {
-        renderCastGrid(guestGrid, guests);
-        // データが取得できたときだけ「Special Guest Card を見る」を表示する
-        if (guestSection) {
-          guestSection.hidden = false;
-          revealFade(guestSection);
-        }
-      } else {
-        console.warn('[cms-content] 期間限定キャストが0件のため、Special Guestは非表示にします。');
-      }
-    }
-
-    /* ---- 料理（service.html）: 部分更新 ---- */
-    var foodGrid = document.getElementById('foodGrid');
-    if (foodGrid) {
-      if (foods.length > 0) {
-        mergeFoodGrid(foodGrid, foods);
-      } else {
-        console.warn('[cms-content] 料理のデータが0件のため、既存の内容を表示します。');
-      }
-    }
-  }
 
   function init() {
-    fetchContents()
-      .then(apply)
-      .catch(function (error) {
-        // 失敗しても画面にはエラーを出さず、HTMLに書かれている内容をそのまま使う
-        console.warn(
-          '[cms-content] microCMSの内容を取得できませんでした。既存の内容を表示します:',
-          error && error.message ? error.message : error
-        );
-      });
+    // 料理 API の独立取得と適用
+    if (document.getElementById('foodGrid')) {
+      fetchJSON(FOOD_API_URL)
+        .then(applyFoodMenu)
+        .catch(function (err) {
+          console.warn('[cms-content] 料理データの取得に失敗しました。フォールバックHTMLを表示します:', err.message || err);
+        });
+    }
+
+    // スタッフ API の独立取得と適用
+    if (document.getElementById('castGrid')) {
+      fetchJSON(STAFF_API_URL)
+        .then(applyStaffMenu)
+        .catch(function (err) {
+          console.warn('[cms-content] スタッフデータの取得に失敗しました。フォールバックHTMLを表示します:', err.message || err);
+        });
+    }
   }
 
   if (document.readyState === 'loading') {
