@@ -1,14 +1,16 @@
 /**
  * Bay NYX - microCMS dynamic content renderer (hybrid mode)
  *
- * food-menu / staff を Netlify Functions 経由で取得し、既存HTMLをフォールバックとして
- * key一致のカードだけ更新します。CMSにだけ存在する項目は sortOrder 順に追加します。
+ * food-menu / staff を Cloudflare Pages Functions または Netlify Functions 経由で取得し、
+ * 既存HTMLをフォールバックとして key一致のカードだけ更新します。
+ * CMSにだけ存在する項目は sortOrder 順に追加します。
  */
 (function () {
   'use strict';
 
-  var FOOD_API_URL = '/.netlify/functions/food-menu';
-  var STAFF_API_URL = '/.netlify/functions/staff';
+  // Cloudflare Pages を優先し、利用できない場合は Netlify Functions へフォールバックする。
+  var FOOD_API_URLS = ['/api/food-menu', '/.netlify/functions/food-menu'];
+  var STAFF_API_URLS = ['/api/staff', '/.netlify/functions/staff'];
   var FALLBACK_ORDER = 999999;
   var DEFAULT_RANKS = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
   var DEFAULT_SYMBOLS = ['♠', '♥', '♦', '♣'];
@@ -77,16 +79,34 @@
     return items.slice().sort(compareItems);
   }
 
-  function fetchJSON(url) {
-    return fetch(url, { headers: { Accept: 'application/json' } })
-      .then(function (response) {
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        return response.json();
-      })
-      .then(function (data) {
-        if (!data || !Array.isArray(data.contents)) throw new Error('Invalid response format');
-        return data.contents;
-      });
+  /**
+   * 同じサイトを Cloudflare Pages / Netlify のどちらへ置いても動くよう、
+   * API候補を先頭から試す。全候補が失敗した場合だけ静的HTMLへフォールバックする。
+   */
+  function fetchJSON(urls) {
+    var candidates = Array.isArray(urls) ? urls : [urls];
+
+    function attempt(index, lastError) {
+      if (index >= candidates.length) {
+        return Promise.reject(lastError || new Error('No API endpoint available'));
+      }
+
+      var url = candidates[index];
+      return fetch(url, { headers: { Accept: 'application/json' } })
+        .then(function (response) {
+          if (!response.ok) throw new Error(url + ' HTTP ' + response.status);
+          return response.json();
+        })
+        .then(function (data) {
+          if (!data || !Array.isArray(data.contents)) throw new Error(url + ' invalid response');
+          return data.contents;
+        })
+        .catch(function (error) {
+          return attempt(index + 1, error);
+        });
+    }
+
+    return attempt(0, null);
   }
 
   function findByKey(container, key) {
@@ -380,7 +400,7 @@
 
   function init() {
     if (document.getElementById('foodGrid')) {
-      fetchJSON(FOOD_API_URL)
+      fetchJSON(FOOD_API_URLS)
         .then(applyFoodMenu)
         .catch(function (error) {
           console.warn('[cms-content] 料理データの取得に失敗しました。フォールバックHTMLを表示します:', error.message || error);
@@ -388,7 +408,7 @@
     }
 
     if (document.getElementById('castGrid')) {
-      fetchJSON(STAFF_API_URL)
+      fetchJSON(STAFF_API_URLS)
         .then(applyStaffMenu)
         .catch(function (error) {
           console.warn('[cms-content] スタッフデータの取得に失敗しました。フォールバックHTMLを表示します:', error.message || error);
